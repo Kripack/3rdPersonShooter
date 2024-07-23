@@ -1,10 +1,10 @@
 public abstract class MovementBaseState 
 {
-    protected PlayerController controller;
+    protected PlayerController Controller;
 
     public MovementBaseState(PlayerController controller)
     {
-        this.controller = controller;
+        this.Controller = controller;
     }
     public abstract void EnterState();
 

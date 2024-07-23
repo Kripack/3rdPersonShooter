@@ -89,6 +89,33 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ChangeView"",
+                    ""type"": ""Button"",
+                    ""id"": ""43755eee-344f-4b98-b9cf-d2de76aeb887"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Tap,Hold(duration=0.1)"",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SelectWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""e275c5b0-22c6-4d08-b8c3-6bf6ac8485ab"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack_1"",
+                    ""type"": ""Button"",
+                    ""id"": ""2c9841d6-fde9-4133-9094-8460fefbf24e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -212,6 +239,39 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
                     ""action"": ""Rolling"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""78e7a94a-82af-4ea9-87f7-109ff0fcaf35"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard Mouse"",
+                    ""action"": ""ChangeView"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6771d21c-6a5f-4561-8436-e5ae0abf1f88"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""12284de4-327d-49e6-8115-1ab107b90f20"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard Mouse"",
+                    ""action"": ""Attack_1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -272,6 +332,9 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         m_Gameplay_Crouch = m_Gameplay.FindAction("Crouch", throwIfNotFound: true);
         m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
         m_Gameplay_Rolling = m_Gameplay.FindAction("Rolling", throwIfNotFound: true);
+        m_Gameplay_ChangeView = m_Gameplay.FindAction("ChangeView", throwIfNotFound: true);
+        m_Gameplay_SelectWeapon = m_Gameplay.FindAction("SelectWeapon", throwIfNotFound: true);
+        m_Gameplay_Attack_1 = m_Gameplay.FindAction("Attack_1", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
@@ -343,6 +406,9 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Crouch;
     private readonly InputAction m_Gameplay_Jump;
     private readonly InputAction m_Gameplay_Rolling;
+    private readonly InputAction m_Gameplay_ChangeView;
+    private readonly InputAction m_Gameplay_SelectWeapon;
+    private readonly InputAction m_Gameplay_Attack_1;
     public struct GameplayActions
     {
         private @GameInput m_Wrapper;
@@ -354,6 +420,9 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         public InputAction @Crouch => m_Wrapper.m_Gameplay_Crouch;
         public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
         public InputAction @Rolling => m_Wrapper.m_Gameplay_Rolling;
+        public InputAction @ChangeView => m_Wrapper.m_Gameplay_ChangeView;
+        public InputAction @SelectWeapon => m_Wrapper.m_Gameplay_SelectWeapon;
+        public InputAction @Attack_1 => m_Wrapper.m_Gameplay_Attack_1;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -384,6 +453,15 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
             @Rolling.started += instance.OnRolling;
             @Rolling.performed += instance.OnRolling;
             @Rolling.canceled += instance.OnRolling;
+            @ChangeView.started += instance.OnChangeView;
+            @ChangeView.performed += instance.OnChangeView;
+            @ChangeView.canceled += instance.OnChangeView;
+            @SelectWeapon.started += instance.OnSelectWeapon;
+            @SelectWeapon.performed += instance.OnSelectWeapon;
+            @SelectWeapon.canceled += instance.OnSelectWeapon;
+            @Attack_1.started += instance.OnAttack_1;
+            @Attack_1.performed += instance.OnAttack_1;
+            @Attack_1.canceled += instance.OnAttack_1;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -409,6 +487,15 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
             @Rolling.started -= instance.OnRolling;
             @Rolling.performed -= instance.OnRolling;
             @Rolling.canceled -= instance.OnRolling;
+            @ChangeView.started -= instance.OnChangeView;
+            @ChangeView.performed -= instance.OnChangeView;
+            @ChangeView.canceled -= instance.OnChangeView;
+            @SelectWeapon.started -= instance.OnSelectWeapon;
+            @SelectWeapon.performed -= instance.OnSelectWeapon;
+            @SelectWeapon.canceled -= instance.OnSelectWeapon;
+            @Attack_1.started -= instance.OnAttack_1;
+            @Attack_1.performed -= instance.OnAttack_1;
+            @Attack_1.canceled -= instance.OnAttack_1;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -490,6 +577,9 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         void OnCrouch(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnRolling(InputAction.CallbackContext context);
+        void OnChangeView(InputAction.CallbackContext context);
+        void OnSelectWeapon(InputAction.CallbackContext context);
+        void OnAttack_1(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

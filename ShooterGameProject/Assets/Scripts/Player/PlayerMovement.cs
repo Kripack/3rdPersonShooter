@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Windows;
-using static UnityEngine.EventSystems.StandaloneInputModule;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -12,32 +7,32 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform cameraObject;
     [SerializeField] private Transform cameraFollowTarget;
 
-    private Rigidbody rb;
+    private Rigidbody _rb;
     
     [SerializeField] private float jumpingForce;
     [SerializeField] private float leapingForce;
-    private float instantGravity = 2f;
-    private float gravityForce = 9.87f;
-    private float inAirTimer = 0.1f;
+    [SerializeField] private float instantGravity = 2f;
+    [SerializeField] private float gravityForce = 9.87f;
+    [SerializeField] private float inAirTimer = 0.1f;
 
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
     }
 
     public void Move(Vector2 moveInput, float speed, float speedMultiplier = 1f)
     {
-        Vector3 forwardVel = cameraObject.forward * moveInput.y;
-        Vector3 horizontalVel = cameraObject.right * moveInput.x;
-        Vector3 moveDirection = (forwardVel + horizontalVel).normalized;
+        Vector3 forwardVel = transform.forward * moveInput.y;
+        Vector3 horizontalVel = transform.right * moveInput.x;
+
+        var moveDirection = (forwardVel + horizontalVel).normalized;
         moveDirection.y = 0f;
 
-        rb.MovePosition(transform.position + moveDirection * speed * speedMultiplier * Time.fixedDeltaTime);
+        _rb.MovePosition(transform.position + moveDirection * (speed * speedMultiplier * Time.fixedDeltaTime));
     }
     public void Rotate(float rotationSpeed)
     {
-        Vector3 targetDirection = Vector3.zero;
-        targetDirection = cameraObject.forward;
+        Vector3 targetDirection = cameraObject.forward;
         targetDirection.y = 0f;
         Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
         Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
@@ -46,8 +41,8 @@ public class PlayerMovement : MonoBehaviour
     }
     public void RotateToMoveDir(Vector2 moveInput)
     {
-        Vector3 rotateDirection = cameraObject.forward * moveInput.y;
-        rotateDirection += cameraObject.right * moveInput.x;
+        Vector3 rotateDirection = transform.forward * moveInput.y;
+        rotateDirection += transform.right * moveInput.x;
         rotateDirection.y = 0f;
         rotateDirection.Normalize();
 
@@ -60,17 +55,17 @@ public class PlayerMovement : MonoBehaviour
     }
     public void ApplyGravity()
     {
-        rb.AddForce(instantGravity * Vector3.down);
+        _rb.AddForce(instantGravity * Vector3.down);
         if (!IsGrounded())
         {
             inAirTimer += Time.deltaTime;
-            rb.AddForce(gravityForce * inAirTimer * Vector3.down);
+            _rb.AddForce(gravityForce * inAirTimer * Vector3.down);
         }
         else inAirTimer = 0;
     }
     public void Jump()
     {
-        rb.AddForce(Vector3.up * jumpingForce, ForceMode.Impulse);
+        _rb.AddForce(Vector3.up * jumpingForce, ForceMode.Impulse);
         //rb.AddForce(transform.forward * leapingForce, ForceMode.VelocityChange);
     }
     //public void Rotate()

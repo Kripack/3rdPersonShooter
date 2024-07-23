@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RunningState : MovementBaseState
 {
-    private float backSpeed;
+    private float _backSpeed;
 
     public RunningState(PlayerController controller) : base(controller)
     {
@@ -12,30 +12,32 @@ public class RunningState : MovementBaseState
 
     public override void EnterState()
     {
-        controller.Animator.SetBool("Running", true);
-        controller.SetSpeed(controller.sprintSpeed);
-        backSpeed = controller.sprintSpeed / 2f;
+        Controller.CharacterAnimator.Animator.SetBool(Controller.CharacterAnimator.RunningBool, true);
+        Controller.SetSpeed(Controller.SprintSpeed);
+        _backSpeed = Controller.SprintSpeed / 2f;
+        Controller.CharacterAnimator.SetSpineAimWeight(Controller.CharacterAnimator.SpineAimSprintWeight);
     }
 
     public override void UpdateState()
     {
-        if (controller.input.moveInput == Vector2.zero)
+        if (Controller.input.moveInput == Vector2.zero)
         {
-            controller.SetMovementState(controller.IdleState);
+            Controller.SetMovementState(Controller.IdleState);
         }
-        else if (controller.input.sprint == false)
+        else if (Controller.input.sprint == false)
         {
-            controller.SetMovementState(controller.WalkingState);
+            Controller.SetMovementState(Controller.WalkingState);
         }
 
-        if (controller.input.moveInput.y < 0)
+        if (Controller.input.moveInput.y < 0)
         {
-            controller.SetSpeed(backSpeed);
+            Controller.SetSpeed(_backSpeed);
         }
-        else controller.SetSpeed(controller.sprintSpeed);
+        else Controller.SetSpeed(Controller.SprintSpeed);
     }
     public override void ExitState()
     {
-        controller.Animator.SetBool("Running", false);
+        Controller.CharacterAnimator.Animator.SetBool(Controller.CharacterAnimator.RunningBool, false);
+        Controller.CharacterAnimator.SetSpineAimWeight(Controller.CharacterAnimator.SpineAimWeight);
     }
 }

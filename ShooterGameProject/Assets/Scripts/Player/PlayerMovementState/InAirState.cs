@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class InAirState : MovementBaseState
 {
@@ -10,21 +11,24 @@ public class InAirState : MovementBaseState
 
     public override void EnterState()
     {
-        controller.SetSpeed(controller.AirSpeed);
+        Controller.SetSpeed(Controller.AirSpeed);
     }
 
     public override void UpdateState()
     {
-        if (!controller.isPerformingAction) 
+        if (!Controller.IsPerformingAction && !Controller.IsJumped)
         {
-            controller.CharacterAnimator.PlayTargetActionAnimation("FallingLoop", false);
-            //controller.Animator.Play("FallingLoop",1,1f);
+            if (Controller.CombatSystem.WeaponEquiped) Controller.CharacterAnimator.Animator.CrossFade(Controller.CharacterAnimator.FallingLoopLegsOnly, 0.1f);
+            else Controller.CharacterAnimator.Animator.CrossFade(Controller.CharacterAnimator.FallingLoop, 0.1f);
+
         }
         
-        if (controller.Motor.IsGrounded())
+        if (Controller.Motor.IsGrounded())
         {
-            controller.CharacterAnimator.PlayTargetActionAnimation("Landing", true);
-            controller.SetMovementState(controller.IdleState);
+            if (Controller.CombatSystem.WeaponEquiped) Controller.CharacterAnimator.PlayTargetActionAnimation(Controller.CharacterAnimator.LandingLegsOnlyAnimation, true);
+            else Controller.CharacterAnimator.PlayTargetActionAnimation(Controller.CharacterAnimator.LandingAnimation, true);
+            
+            Controller.SetMovementState(Controller.IdleState);
         }
     }
 

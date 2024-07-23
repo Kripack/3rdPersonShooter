@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WalkingState : MovementBaseState
 {
-    private float backSpeed;
+    private float _backSpeed;
 
     public WalkingState(PlayerController controller) : base(controller)
     {
@@ -12,34 +12,34 @@ public class WalkingState : MovementBaseState
 
     public override void EnterState()
     {
-        controller.Animator.SetBool("Walking", true);
-        controller.SetSpeed(controller.moveSpeed);
-        backSpeed = controller.moveSpeed / 2f;
+        Controller.CharacterAnimator.Animator.SetBool(Controller.CharacterAnimator.WalkingBool, true);
+        Controller.SetSpeed(Controller.MoveSpeed);
+        _backSpeed = Controller.MoveSpeed / 2f;
     }
 
     public override void UpdateState()
     {
-        if (controller.input.sprint == true)
+        if (Controller.input.sprint == true)
         {
-           controller.SetMovementState(controller.RunningState);
+           Controller.SetMovementState(Controller.RunningState);
         }
-        else if(controller.input.crouch == true)
+        else if(Controller.input.crouch == true)
         {
-            controller.SetMovementState(controller.CrouchingState);
+            Controller.SetMovementState(Controller.CrouchingState);
         }
-        else if(controller.input.moveInput == Vector2.zero)
+        else if(Controller.input.moveInput == Vector2.zero)
         {
-           controller.SetMovementState(controller.IdleState);
+           Controller.SetMovementState(Controller.IdleState);
         }
 
-        if (controller.input.moveInput.y < 0)
+        if (Controller.input.moveInput.y < 0)
         {
-            controller.SetSpeed(backSpeed);
+            Controller.SetSpeed(_backSpeed);
         }
-        else controller.SetSpeed(controller.moveSpeed);
+        else Controller.SetSpeed(Controller.MoveSpeed);
     }
     public override void ExitState()
     {
-        controller.Animator.SetBool("Walking", false);
+        Controller.CharacterAnimator.Animator.SetBool(Controller.CharacterAnimator.WalkingBool, false);
     }
 }

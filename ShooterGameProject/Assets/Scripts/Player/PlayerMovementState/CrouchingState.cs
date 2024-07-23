@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CrouchingState : MovementBaseState
 {
-    private float backSpeed;
+    private float _backSpeed;
 
     public CrouchingState(PlayerController controller) : base(controller)
     {
@@ -12,30 +12,30 @@ public class CrouchingState : MovementBaseState
 
     public override void EnterState()
     {
-        controller.Animator.SetBool("Crouching", true);
-        controller.SetSpeed(controller.crouchSpeed);
-        backSpeed = controller.crouchSpeed / 2f;
+        Controller.CharacterAnimator.Animator.SetBool(Controller.CharacterAnimator.CrouchingBool, true);
+        Controller.SetSpeed(Controller.CrouchSpeed);
+        _backSpeed = Controller.CrouchSpeed / 2f;
     }
 
     public override void UpdateState()
     {
-        if (controller.input.crouch == false)
+        if (Controller.input.crouch == false)
         {
-            if (controller.input.moveInput == Vector2.zero)
+            if (Controller.input.moveInput == Vector2.zero)
             {
-                controller.SetMovementState(controller.IdleState);
+                Controller.SetMovementState(Controller.IdleState);
             }
-            else controller.SetMovementState(controller.WalkingState);
+            else Controller.SetMovementState(Controller.WalkingState);
         }
 
-        if (controller.input.moveInput.y < 0)
+        if (Controller.input.moveInput.y < 0)
         {
-            controller.SetSpeed(backSpeed);
+            Controller.SetSpeed(_backSpeed);
         }
-        else controller.SetSpeed(controller.crouchSpeed);
+        else Controller.SetSpeed(Controller.CrouchSpeed);
     }
     public override void ExitState()
     {
-        controller.Animator.SetBool("Crouching", false);
+        Controller.CharacterAnimator.Animator.SetBool(Controller.CharacterAnimator.CrouchingBool, false);
     }
 }

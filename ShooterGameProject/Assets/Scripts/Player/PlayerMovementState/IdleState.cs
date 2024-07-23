@@ -10,23 +10,23 @@ public class IdleState : MovementBaseState
 
     public override void EnterState()
     {
-        controller.SetSpeed(controller.moveSpeed);
+        Controller.SetSpeed(Controller.MoveSpeed);
     }
 
     public override void UpdateState()
     {
-        if (controller.isPerformingAction) return;
-        if (controller.input.moveInput != Vector2.zero)
+        if (Controller.IsPerformingAction) return;
+        if (Controller.input.moveInput != Vector2.zero)
         {
-            if(controller.input.sprint == true)
+            if(Controller.input.sprint == true)
             {
-                controller.SetMovementState(controller.RunningState);
+                Controller.SetMovementState(Controller.RunningState);
             }
-            else controller.SetMovementState(controller.WalkingState);
+            else Controller.SetMovementState(Controller.WalkingState);
         }
-        if (controller.input.crouch == true)
+        if (Controller.input.crouch == true)
         {
-            controller.SetMovementState(controller.CrouchingState);
+            Controller.SetMovementState(Controller.CrouchingState);
         }
     }
 }

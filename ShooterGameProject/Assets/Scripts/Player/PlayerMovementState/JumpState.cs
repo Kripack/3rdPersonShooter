@@ -15,6 +15,6 @@ public class JumpState : MovementBaseState
 
     public override void UpdateState()
     {
-        controller.SetMovementState(controller.IdleState);
+        Controller.SetMovementState(Controller.IdleState);
     }
 }

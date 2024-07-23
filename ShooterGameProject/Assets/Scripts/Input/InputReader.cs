@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
-[CreateAssetMenu(menuName = "InputManager")]
+[CreateAssetMenu(menuName = "ScriptableObjects/InputReader")]
 public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInput.IUIActions
 {
-    private GameInput gameInput;
+    private GameInput _gameInput;
 
     public bool aim;
     public bool sprint;
@@ -17,29 +18,36 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
     public Vector2 moveInput;
     public Vector2 previusMoveInput;
 
+    #region Events
     public event Action Jump;
     public event Action Roll;
+    public event Action Aim;
+    public event Action ViewChange;
+    public event Action FreeLook;
+    public event Action SelectWeapon;
+    public event Action Attack;
+    #endregion
 
     private void OnEnable()
     {
-        if (gameInput == null)
+        if (_gameInput == null)
         {
-            gameInput = new();
-            gameInput.Gameplay.SetCallbacks(this);
-            gameInput.UI.SetCallbacks(this);
+            _gameInput = new();
+            _gameInput.Gameplay.SetCallbacks(this);
+            _gameInput.UI.SetCallbacks(this);
 
             SetGameplay();
         }
     }
     private void SetGameplay()
     {
-        gameInput.Gameplay.Enable();
-        gameInput.UI.Disable();
+        _gameInput.Gameplay.Enable();
+        _gameInput.UI.Disable();
     }
     private void SetUI()
     {
-        gameInput.Gameplay.Disable();
-        gameInput.UI.Enable();
+        _gameInput.Gameplay.Disable();
+        _gameInput.UI.Enable();
     }
     public void OnLook(InputAction.CallbackContext context)
     {
@@ -49,6 +57,7 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
     public void OnAim(InputAction.CallbackContext context)
     {
         aim = context.ReadValueAsButton();
+        Aim?.Invoke();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -63,7 +72,7 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
 
     public void OnCrouch(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Started)
+        if (context.phase is InputActionPhase.Started)
         {
             crouch = !crouch;
         }
@@ -76,7 +85,7 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Started)
+        if (context.phase is InputActionPhase.Started)
         {
             Jump?.Invoke();
         }
@@ -84,9 +93,47 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
 
     public void OnRolling(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Started)
+        if (context.phase is InputActionPhase.Started)
         {
             Roll?.Invoke();
+        }
+    }
+
+    public void OnChangeView(InputAction.CallbackContext context)
+    { 
+        if (context.phase is InputActionPhase.Started)
+        {
+            if (context.interaction is HoldInteraction)
+            {
+                FreeLook?.Invoke();
+            }
+        }
+        if (context.phase is InputActionPhase.Performed)
+        {
+            if (context.interaction is TapInteraction) ViewChange?.Invoke();
+        }
+        if (context.phase is InputActionPhase.Canceled)
+        {
+            if (context.interaction is HoldInteraction)
+            {
+                FreeLook?.Invoke();
+            }
+        }
+    }
+
+    public void OnSelectWeapon(InputAction.CallbackContext context)
+    {
+        if (context.phase is InputActionPhase.Performed)
+        {
+            SelectWeapon?.Invoke();
+        }
+    }
+
+    public void OnAttack_1(InputAction.CallbackContext context)
+    {
+        if (context.phase is InputActionPhase.Started)
+        {
+            Attack?.Invoke();
         }
     }
 }
