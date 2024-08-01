@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -26,6 +24,9 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
     public event Action FreeLook;
     public event Action SelectWeapon;
     public event Action Attack;
+    public event Action StartAutoAttack;
+    public event Action StopAutoAttack;
+    public event Action Reload;
     #endregion
 
     private void OnEnable()
@@ -103,10 +104,7 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
     { 
         if (context.phase is InputActionPhase.Started)
         {
-            if (context.interaction is HoldInteraction)
-            {
-                FreeLook?.Invoke();
-            }
+            if (context.interaction is HoldInteraction) FreeLook?.Invoke();
         }
         if (context.phase is InputActionPhase.Performed)
         {
@@ -114,10 +112,7 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
         }
         if (context.phase is InputActionPhase.Canceled)
         {
-            if (context.interaction is HoldInteraction)
-            {
-                FreeLook?.Invoke();
-            }
+            if (context.interaction is HoldInteraction) FreeLook?.Invoke();
         }
     }
 
@@ -134,6 +129,19 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
         if (context.phase is InputActionPhase.Started)
         {
             Attack?.Invoke();
+            if (context.interaction is HoldInteraction) StartAutoAttack?.Invoke();
+        }
+        if (context.phase is InputActionPhase.Canceled)
+        {
+            if (context.interaction is HoldInteraction) StopAutoAttack?.Invoke();
+        }
+    }
+
+    public void OnReload(InputAction.CallbackContext context)
+    {
+        if (context.phase is InputActionPhase.Started)
+        {
+            Reload?.Invoke();
         }
     }
 }

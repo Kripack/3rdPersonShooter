@@ -7,12 +7,16 @@ public class RangedWeaponData : WeaponData
     public AmmoType ammoType;
     public float range;
     public float reloadTime;
+    public bool useRecoil;
+    public float recoilFactor;
+    public float bodyRecoilFactor;
     
-    [Header("Sounds")]
+    [Header("Effects")]
     public AudioClip shootingSound;
     public AudioClip emptyMagazineSound;
     public AudioClip reloadSound;
-
+    public AudioClip[] bulletShellsSound;
+    
     public GameObject impactEffect;
     public AnimationClip reloadAnimation;
 }

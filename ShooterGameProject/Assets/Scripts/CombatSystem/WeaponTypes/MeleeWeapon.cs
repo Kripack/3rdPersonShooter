@@ -6,7 +6,7 @@ public class MeelleWeapon : Weapon
 {
     public override void Attack(float damageMultiplier)
     {
-        CombatSystem.BanAttack();
+        CombatSystemController.BanAttack();
         CharacterAnimator.PlayTargetActionAnimation("MeleeAttack_OneHanded", false);
     }
 }

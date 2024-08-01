@@ -1,14 +1,20 @@
+using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/WeaponData/Default")]
 public class WeaponData : ScriptableObject
 {
-    [FormerlySerializedAs("WeaponName")] [Header("Parameters")]
+    [Header("Parameters")]
     public string weaponName;
     public float damage;
-
+    public float fireRate;
+        
     public LayerMask layerMask;
-
     public GameObject prefab;
+
+    [Header("Camera Shake Setting")]
+    public float cameraShakeDuration;
+    public float cameraShakeStrength;
+    public Ease easeMode;
+
 }

@@ -19783,6 +19783,8 @@ MonoBehaviour:
   leftHandIKTarget: {fileID: 7384057604921721369}
   leftHandHint: {fileID: 3279066737982826056}
   muzzleFlash: {fileID: 9103016966269074847}
+  useSpread: 1
+  spreadFactor: 0.01
 --- !u!114 &5827850162586497933
 MonoBehaviour:
   m_ObjectHideFlags: 0

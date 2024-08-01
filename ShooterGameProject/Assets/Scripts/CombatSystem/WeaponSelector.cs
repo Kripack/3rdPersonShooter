@@ -1,32 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponSelector
 {
-    public WeaponSelector(CombatSystem combatSystem)
+    private int _currentWeaponIndex = -1;
+    public WeaponSelector(CombatSystemController combatSystemController)
     {
-        _combatSystem = combatSystem;
+        _combatSystemController = combatSystemController;
     }
     private Weapon _activeWeapon;
-    private CombatSystem _combatSystem;
+    private CombatSystemController _combatSystemController;
     public void DisableWeapon()
     {
-        _combatSystem.SetEquipStatus(false);
+        _combatSystemController.SetEquipStatus(false);
 
         _activeWeapon.Disable();
         Object.Destroy(_activeWeapon.gameObject);
     }
-    public GameObject ActivateWeapon(WeaponData data, Transform spawnPos, CombatSystem combatSystem)
+    public GameObject ActivateWeapon(WeaponData data, Transform spawnPos, CombatSystemController combatSystemController)
     {
         var newWeaponObject = Object.Instantiate(data.prefab, spawnPos);
-        _activeWeapon = newWeaponObject.GetComponent<Weapon>().Initialize(data, combatSystem);
+        _activeWeapon = newWeaponObject.GetComponent<Weapon>().Initialize(data, combatSystemController);
         
-        combatSystem.SetEquipStatus(true);
+        combatSystemController.SetEquipStatus(true);
         return newWeaponObject;
     }
-    public WeaponData SelectWeapon()
+    public WeaponData SelectNextWeapon(WeaponData[] weaponDataArray)
     {
-        return null;
+        _currentWeaponIndex = (_currentWeaponIndex + 1) % weaponDataArray.Length;
+        WeaponData selectedWeapon = weaponDataArray[_currentWeaponIndex];
+        return selectedWeapon;
     }
 }

@@ -11,14 +11,14 @@ public class AmmoManager
     {
         _currentAmmo = new Dictionary<AmmoType, int>
         {
-            { AmmoType.Pistol9Mm, 10 },
-            { AmmoType.Rifle762X39Mm, 10 },
+            { AmmoType.Pistol9Mm, 9 },
+            { AmmoType.Rifle762X39Mm, 30 },
         };
 
         _totalAmmo = new Dictionary<AmmoType, int>
         {
-            { AmmoType.Pistol9Mm, 100 },
-            { AmmoType.Rifle762X39Mm, 100 },
+            { AmmoType.Pistol9Mm, 90 },
+            { AmmoType.Rifle762X39Mm, 180 },
         };
 
         _magazineSizes = new Dictionary<AmmoType, int>

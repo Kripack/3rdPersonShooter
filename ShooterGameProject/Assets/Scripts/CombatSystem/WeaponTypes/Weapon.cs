@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -6,17 +7,21 @@ public class Weapon : MonoBehaviour
     [SerializeField] private Transform leftHandIKTarget;
     [SerializeField] private Transform leftHandHint;
     
+    protected Camera FPSCam;
     protected CharacterAnimator CharacterAnimator;
-    protected CombatSystem CombatSystem;
+    protected CombatSystemController CombatSystemController;
     protected AudioSource WeaponAudioSource;
 
     protected bool IsReloading;
-    public virtual Weapon Initialize(WeaponData data, CombatSystem cSystem)
+    protected WeaponData WeaponData;
+    public virtual Weapon Initialize(WeaponData data, CombatSystemController cSystemController)
     {
-        CombatSystem = cSystem;
-        CharacterAnimator = cSystem.CharacterAnimator;
+        CombatSystemController = cSystemController;
+        CharacterAnimator = cSystemController.CharacterAnimator;
         WeaponAudioSource = GetComponent<AudioSource>();
-
+        FPSCam = Camera.main;
+        WeaponData = data;
+        
         CharacterAnimator.SetLeftHandIKTarget(leftHandIKTarget, leftHandHint);
 
         CharacterAnimator.SetAimRigWeight(1f);
@@ -32,6 +37,12 @@ public class Weapon : MonoBehaviour
     {
         return;
     }
+
+    public virtual void StartReload()
+    {
+        return;
+    }
+    
     public virtual void Disable()
     {
         CharacterAnimator.SetAimRigWeight(0f);
@@ -41,9 +52,14 @@ public class Weapon : MonoBehaviour
         
         CharacterAnimator.SetLeftHandIKTarget(null, null);
     }
+    
     protected void CreateImpact(GameObject impactObject ,Vector3 spawnPosition, Quaternion rotation)
     {
         Instantiate(impactObject, spawnPosition, rotation);
     }
-
+    
+    protected virtual void ReactOnPrimaryAttack()
+    {
+        CameraService.instance.ShakeCamera(WeaponData.cameraShakeDuration, WeaponData.cameraShakeStrength, WeaponData.easeMode);
+    }
 }

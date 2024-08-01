@@ -92,6 +92,15 @@
                     "id": "2c9841d6-fde9-4133-9094-8460fefbf24e",
                     "expectedControlType": "Button",
                     "processors": "",
+                    "interactions": "Hold",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "2b0d7e5d-de21-4e1d-8aeb-e03d0b2c1cb3",
+                    "expectedControlType": "Button",
+                    "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 }
@@ -248,6 +257,17 @@
                     "processors": "",
                     "groups": "Keyboard Mouse",
                     "action": "Attack_1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "87b05901-b3d2-406f-9474-617e8049a4a6",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard Mouse",
+                    "action": "Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

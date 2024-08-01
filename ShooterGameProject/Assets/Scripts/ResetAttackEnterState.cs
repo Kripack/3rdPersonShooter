@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class ResetAttackEnterState : StateMachineBehaviour
 {
-    private CombatSystem _combatSystem;
+    private CombatSystemController _combatSystemController;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (_combatSystem == null)
+        if (_combatSystemController == null)
         {
-            _combatSystem = animator.GetComponent<CombatSystem>();
+            _combatSystemController = animator.GetComponent<CombatSystemController>();
         }
-        _combatSystem.ResetAttack();
+        _combatSystemController.ResetAttack();
     }
 
 }

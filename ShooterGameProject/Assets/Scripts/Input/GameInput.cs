@@ -114,6 +114,15 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
                     ""id"": ""2c9841d6-fde9-4133-9094-8460fefbf24e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
+                    ""interactions"": ""Hold"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""2b0d7e5d-de21-4e1d-8aeb-e03d0b2c1cb3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 }
@@ -272,6 +281,17 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
                     ""action"": ""Attack_1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""87b05901-b3d2-406f-9474-617e8049a4a6"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard Mouse"",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -335,6 +355,7 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         m_Gameplay_ChangeView = m_Gameplay.FindAction("ChangeView", throwIfNotFound: true);
         m_Gameplay_SelectWeapon = m_Gameplay.FindAction("SelectWeapon", throwIfNotFound: true);
         m_Gameplay_Attack_1 = m_Gameplay.FindAction("Attack_1", throwIfNotFound: true);
+        m_Gameplay_Reload = m_Gameplay.FindAction("Reload", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
@@ -409,6 +430,7 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_ChangeView;
     private readonly InputAction m_Gameplay_SelectWeapon;
     private readonly InputAction m_Gameplay_Attack_1;
+    private readonly InputAction m_Gameplay_Reload;
     public struct GameplayActions
     {
         private @GameInput m_Wrapper;
@@ -423,6 +445,7 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         public InputAction @ChangeView => m_Wrapper.m_Gameplay_ChangeView;
         public InputAction @SelectWeapon => m_Wrapper.m_Gameplay_SelectWeapon;
         public InputAction @Attack_1 => m_Wrapper.m_Gameplay_Attack_1;
+        public InputAction @Reload => m_Wrapper.m_Gameplay_Reload;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -462,6 +485,9 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
             @Attack_1.started += instance.OnAttack_1;
             @Attack_1.performed += instance.OnAttack_1;
             @Attack_1.canceled += instance.OnAttack_1;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -496,6 +522,9 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
             @Attack_1.started -= instance.OnAttack_1;
             @Attack_1.performed -= instance.OnAttack_1;
             @Attack_1.canceled -= instance.OnAttack_1;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -580,6 +609,7 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         void OnChangeView(InputAction.CallbackContext context);
         void OnSelectWeapon(InputAction.CallbackContext context);
         void OnAttack_1(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
