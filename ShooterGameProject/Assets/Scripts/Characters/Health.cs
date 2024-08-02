@@ -17,6 +17,8 @@ public class Health
 
     public void TakeDamage(float amount)
     {
+        if (_currentHealth <= 0f) return;
+        
         _currentHealth -= amount;
 
         if (_currentHealth <= 0)

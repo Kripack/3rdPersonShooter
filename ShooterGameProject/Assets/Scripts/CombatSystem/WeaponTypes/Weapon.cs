@@ -7,25 +7,25 @@ public class Weapon : MonoBehaviour
     [SerializeField] private Transform leftHandIKTarget;
     [SerializeField] private Transform leftHandHint;
     
-    protected Camera FPSCam;
-    protected CharacterAnimator CharacterAnimator;
-    protected CombatSystemController CombatSystemController;
-    protected AudioSource WeaponAudioSource;
+    protected Camera fpsCam;
+    protected CharacterAnimator characterAnimator;
+    protected CombatSystemController combatSystemController;
+    protected AudioSource weaponAudioSource;
 
-    protected bool IsReloading;
-    protected WeaponData WeaponData;
+    protected bool isReloading;
+    protected WeaponData weaponData;
     public virtual Weapon Initialize(WeaponData data, CombatSystemController cSystemController)
     {
-        CombatSystemController = cSystemController;
-        CharacterAnimator = cSystemController.CharacterAnimator;
-        WeaponAudioSource = GetComponent<AudioSource>();
-        FPSCam = Camera.main;
-        WeaponData = data;
+        combatSystemController = cSystemController;
+        characterAnimator = cSystemController.CharacterAnimator;
+        weaponAudioSource = GetComponent<AudioSource>();
+        fpsCam = Camera.main;
+        weaponData = data;
         
-        CharacterAnimator.SetLeftHandIKTarget(leftHandIKTarget, leftHandHint);
+        characterAnimator.SetLeftHandIKTarget(leftHandIKTarget, leftHandHint);
 
-        CharacterAnimator.SetAimRigWeight(1f);
-        CharacterAnimator.SetHoldWeaponRigWeight(1f);
+        characterAnimator.SetAimRigWeight(1f);
+        characterAnimator.SetHoldWeaponRigWeight(1f);
         
         return this;
     }
@@ -45,21 +45,26 @@ public class Weapon : MonoBehaviour
     
     public virtual void Disable()
     {
-        CharacterAnimator.SetAimRigWeight(0f);
-        CharacterAnimator.SetHoldWeaponRigWeight(0f);
+        characterAnimator.SetAimRigWeight(0f);
+        characterAnimator.SetHoldWeaponRigWeight(0f);
         
-        CharacterAnimator.Animator.CrossFade("Empty", 0.1f, 3);
+        characterAnimator.Animator.CrossFade("Empty", 0.1f, 3);
         
-        CharacterAnimator.SetLeftHandIKTarget(null, null);
+        characterAnimator.SetLeftHandIKTarget(null, null);
     }
     
     protected void CreateImpact(GameObject impactObject ,Vector3 spawnPosition, Quaternion rotation)
     {
-        Instantiate(impactObject, spawnPosition, rotation);
+        var impact = Instantiate(impactObject, spawnPosition, rotation);
+    }
+    protected void CreateImpact(GameObject impactObject ,RaycastHit hit, Quaternion rotation)
+    {
+        var impact = Instantiate(impactObject, hit.point, rotation);
+        impact.transform.parent = hit.transform;
     }
     
     protected virtual void ReactOnPrimaryAttack()
     {
-        CameraService.instance.ShakeCamera(WeaponData.cameraShakeDuration, WeaponData.cameraShakeStrength, WeaponData.easeMode);
+        CameraService.instance.ShakeCamera(weaponData.cameraShakeDuration, weaponData.cameraShakeStrength, weaponData.easeMode);
     }
 }

@@ -10,30 +10,30 @@ public class CrouchingState : MovementState
 
     public override void OnEnter()
     {
-        Controller.CharacterAnimator.Animator.SetBool(Controller.CharacterAnimator.CrouchingBool, true);
-        Controller.SetSpeed(Controller.CrouchSpeed);
-        _backSpeed = Controller.CrouchSpeed / 2f;
+        controller.CharacterAnimator.Animator.SetBool(controller.CharacterAnimator.CrouchingBool, true);
+        controller.SetSpeed(controller.CrouchSpeed);
+        _backSpeed = controller.CrouchSpeed / 2f;
     }
 
     public override void Update()
     {
-        if (Controller.input.crouch == false)
+        if (controller.input.crouch == false)
         {
-            if (Controller.input.moveInput == Vector2.zero)
+            if (controller.input.moveInput == Vector2.zero)
             {
-                StateMachine.SetState(Controller.IdleState);
+                stateMachine.SetState(controller.IdleState);
             }
-            else StateMachine.SetState(Controller.WalkingState);
+            else stateMachine.SetState(controller.WalkingState);
         }
 
-        if (Controller.input.moveInput.y < 0)
+        if (controller.input.moveInput.y < 0)
         {
-            Controller.SetSpeed(_backSpeed);
+            controller.SetSpeed(_backSpeed);
         }
-        else Controller.SetSpeed(Controller.CrouchSpeed);
+        else controller.SetSpeed(controller.CrouchSpeed);
     }
     public override void OnExit()
     {
-        Controller.CharacterAnimator.Animator.SetBool(Controller.CharacterAnimator.CrouchingBool, false);
+        controller.CharacterAnimator.Animator.SetBool(controller.CharacterAnimator.CrouchingBool, false);
     }
 }

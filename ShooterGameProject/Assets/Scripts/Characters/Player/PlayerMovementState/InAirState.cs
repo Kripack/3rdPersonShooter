@@ -6,24 +6,24 @@ public class InAirState : MovementState
 
     public override void OnEnter()
     {
-        Controller.SetSpeed(Controller.AirSpeed);
+        controller.SetSpeed(controller.AirSpeed);
     }
 
     public override void Update()
     {
-        if (!Controller.IsPerformingAction && !Controller.IsJumped)
+        if (!controller.IsPerformingAction && !controller.IsJumped)
         {
-            if (Controller.CombatSystemController.WeaponEquiped) Controller.CharacterAnimator.Animator.CrossFade(Controller.CharacterAnimator.FallingLoopLegsOnly, 0.1f);
-            else Controller.CharacterAnimator.Animator.CrossFade(Controller.CharacterAnimator.FallingLoop, 0.1f);
+            if (controller.CombatSystemController.WeaponEquiped) controller.CharacterAnimator.Animator.CrossFade(controller.CharacterAnimator.FallingLoopLegsOnly, 0.1f);
+            else controller.CharacterAnimator.Animator.CrossFade(controller.CharacterAnimator.FallingLoop, 0.1f);
 
         }
         
-        if (Controller.Motor.IsGrounded())
+        if (controller.Motor.IsGrounded())
         {
-            if (Controller.CombatSystemController.WeaponEquiped) Controller.CharacterAnimator.PlayTargetActionAnimation(Controller.CharacterAnimator.LandingLegsOnlyAnimation, true);
-            else Controller.CharacterAnimator.PlayTargetActionAnimation(Controller.CharacterAnimator.LandingAnimation, true);
+            if (controller.CombatSystemController.WeaponEquiped) controller.CharacterAnimator.PlayTargetActionAnimation(controller.CharacterAnimator.LandingLegsOnlyAnimation, true);
+            else controller.CharacterAnimator.PlayTargetActionAnimation(controller.CharacterAnimator.LandingAnimation, true);
             
-            StateMachine.SetState(Controller.IdleState);
+            stateMachine.SetState(controller.IdleState);
         }
     }
 

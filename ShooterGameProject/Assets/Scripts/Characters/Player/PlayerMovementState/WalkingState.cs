@@ -10,34 +10,34 @@ public class WalkingState : MovementState
 
     public override void OnEnter()
     {
-        Controller.CharacterAnimator.Animator.SetBool(Controller.CharacterAnimator.WalkingBool, true);
-        Controller.SetSpeed(Controller.MoveSpeed);
-        _backSpeed = Controller.MoveSpeed / 2f;
+        controller.CharacterAnimator.Animator.SetBool(controller.CharacterAnimator.WalkingBool, true);
+        controller.SetSpeed(controller.MoveSpeed);
+        _backSpeed = controller.MoveSpeed / 2f;
     }
 
     public override void Update()
     {
-        if (Controller.input.sprint == true)
+        if (controller.input.sprint == true)
         {
-            StateMachine.SetState(Controller.RunningState);
+            stateMachine.SetState(controller.RunningState);
         }
-        else if(Controller.input.crouch == true)
+        else if(controller.input.crouch == true)
         {
-            StateMachine.SetState(Controller.CrouchingState);
+            stateMachine.SetState(controller.CrouchingState);
         }
-        else if(Controller.input.moveInput == Vector2.zero)
+        else if(controller.input.moveInput == Vector2.zero)
         {
-            StateMachine.SetState(Controller.IdleState);
+            stateMachine.SetState(controller.IdleState);
         }
 
-        if (Controller.input.moveInput.y < 0)
+        if (controller.input.moveInput.y < 0)
         {
-            Controller.SetSpeed(_backSpeed);
+            controller.SetSpeed(_backSpeed);
         }
-        else Controller.SetSpeed(Controller.MoveSpeed);
+        else controller.SetSpeed(controller.MoveSpeed);
     }
     public override void OnExit()
     {
-        Controller.CharacterAnimator.Animator.SetBool(Controller.CharacterAnimator.WalkingBool, false);
+        controller.CharacterAnimator.Animator.SetBool(controller.CharacterAnimator.WalkingBool, false);
     }
 }

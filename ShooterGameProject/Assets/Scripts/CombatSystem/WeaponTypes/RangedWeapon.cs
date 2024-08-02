@@ -5,16 +5,16 @@ public class RangedWeapon : Weapon
 {
     [SerializeField] protected ParticleSystem muzzleFlash;
 
-    protected RangedWeaponData RangeData;
+    protected RangedWeaponData rangeData;
     public override Weapon Initialize(WeaponData data, CombatSystemController combatSystemController)
     {
         base.Initialize(data, combatSystemController);
         
-        CharacterAnimator.Animator.SetBool(CharacterAnimator.AimingBool, true);
+        characterAnimator.Animator.SetBool(characterAnimator.AimingBool, true);
 
         if (data is RangedWeaponData)
         {
-            RangeData = (RangedWeaponData) data;
+            rangeData = (RangedWeaponData) data;
         }
         else { Debug.LogError("This is a Ranged Weapon. The data file should be RangeWeaponData."); }
 
@@ -24,27 +24,27 @@ public class RangedWeapon : Weapon
     public override void Disable()
     {
         base.Disable();
-        CharacterAnimator.Animator.SetBool(CharacterAnimator.AimingBool, false);
+        characterAnimator.Animator.SetBool(characterAnimator.AimingBool, false);
     }
     
     public override void StartReload()
     {
-        if (IsReloading) return;
-        IsReloading = true;
+        if (isReloading) return;
+        isReloading = true;
 
-        SoundFXManager.instance.PlaySoundClip(RangeData.reloadSound, WeaponAudioSource);
+        SoundFXManager.instance.PlaySoundClip(rangeData.reloadSound, weaponAudioSource);
 
         Debug.Log("Reloading...");
         
-        CharacterAnimator.Animator.SetTrigger(CharacterAnimator.ReloadTrigger);
-        StartCoroutine(WeaponRigDelayOff(RangeData.reloadAnimation.length - 0.5f));
+        characterAnimator.Animator.SetTrigger(characterAnimator.ReloadTrigger);
+        StartCoroutine(WeaponRigDelayOff(rangeData.reloadAnimation.length - 0.5f));
     }
     
     public override void ApplyReload()
     {
-        if (!IsReloading) return;
-        CombatSystemController.AmmoManager.Reload(RangeData.ammoType);
-        IsReloading = false;
+        if (!isReloading) return;
+        combatSystemController.AmmoManager.Reload(rangeData.ammoType);
+        isReloading = false;
         
         Debug.Log("End Reloading.");
     }
@@ -53,17 +53,17 @@ public class RangedWeapon : Weapon
     {
         base.ReactOnPrimaryAttack();
         
-        var recoil = new Vector3(RangeData.bodyRecoilFactor, 0f, 0f);
-        CombatSystemController.ApplyBodyRecoil(recoil);
+        var recoil = new Vector3(rangeData.bodyRecoilFactor, 0f, 0f);
+        combatSystemController.ApplyBodyRecoil(recoil);
     }
     private IEnumerator WeaponRigDelayOff(float delay)
     {
-        CharacterAnimator.SetAimRigWeight(0f);
-        CharacterAnimator.SetHoldWeaponRigWeight(0f);
+        characterAnimator.SetAimRigWeight(0f);
+        characterAnimator.SetHoldWeaponRigWeight(0f);
         
         yield return new WaitForSeconds(delay);
 
-        CharacterAnimator.SetAimRigWeight(1f);
-        CharacterAnimator.SetHoldWeaponRigWeight(1f);
+        characterAnimator.SetAimRigWeight(1f);
+        characterAnimator.SetHoldWeaponRigWeight(1f);
     }
 }

@@ -1,16 +1,20 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     public InputReader input;
     public GameObject aimIKTarget;
     public GameObject cinemachineBrain;
+    public Health Health { get; private set; }
     public CharacterAnimator CharacterAnimator { get; private set; }
+    public CombatSystemController CombatSystemController { get; private set; }
     public PlayerMovement Motor { get; private set; }
 
     #region Parameters
+    
     [field: SerializeField] public bool IsPerformingAction { get; set; }
     [field: SerializeField] public bool IsJumped { get; set; }
     [field:SerializeField] public float MoveSpeed { get; private set; }
@@ -18,22 +22,26 @@ public class PlayerController : MonoBehaviour
     [field: SerializeField] public float CrouchSpeed { get; private set; }
     [field: SerializeField] public float AirSpeed { get; private set; }
     [field: SerializeField] private float RotationSpeed { get; set; }
+    [SerializeField] private float maxHp;
+    
     #endregion
     
     #region States 
+    
     private StateMachine _stateMachine;
     public IdleState IdleState { get; private set; }
     public WalkingState WalkingState { get; private set; }
     public RunningState RunningState { get; private set; }
     public CrouchingState CrouchingState { get; private set; }
     public InAirState InAirState { get; private set; }
+    
     #endregion
 
     private CameraService _cameraService;
-    public CombatSystemController CombatSystemController { get; private set; }
     private float _currentSpeed;
     private bool _lockRotation;
     private bool _isFreeLook;
+
     private void Awake()
     {
         CharacterAnimator = GetComponent<CharacterAnimator>();
@@ -47,6 +55,8 @@ public class PlayerController : MonoBehaviour
         RunningState = new RunningState(_stateMachine,this);
         CrouchingState = new CrouchingState(_stateMachine,this);
         InAirState = new InAirState(_stateMachine,this);
+
+        this.Health = new Health(maxHp);
     }
     private void Start()
     {
@@ -55,7 +65,14 @@ public class PlayerController : MonoBehaviour
         input.Jump += OnJump;
         input.Roll += OnRoll;
         input.FreeLook += FreeLook;
+        this.Health.Die += Die;
     }
+
+    private void Die()
+    {
+        Debug.LogWarning("YOU DIED!");
+    }
+
     private void Update()
     {
         CharacterAnimator.UpdateAnimationBlend(input.moveInput);
@@ -68,26 +85,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.F))
         {
             Debug.Log(_stateMachine.CurrentState.ToString());
+            Motor.Jump();
         }
-        if (!IsPerformingAction)
-        {
-            if(!_lockRotation) Motor.Rotate(RotationSpeed);
-            if (input.moveInput != Vector2.zero)
-            {
-                Motor.Move(input.moveInput, _currentSpeed);
-            }
-        }
-    }
-
-    private void LateUpdate()
-    {
-        _cameraService.CameraControl();
-    }
-
-    private void FixedUpdate()
-    {
-        Motor.ApplyGravity();
-        // Motor.ApplyGravity();
         // if (!IsPerformingAction)
         // {
         //     if(!_lockRotation) Motor.Rotate(RotationSpeed);
@@ -96,7 +95,26 @@ public class PlayerController : MonoBehaviour
         //         Motor.Move(input.moveInput, _currentSpeed);
         //     }
         // }
-        // _cameraService.CameraControl();
+    }
+
+    private void LateUpdate()
+    {
+        //_cameraService.CameraControl();
+    }
+
+    private void FixedUpdate()
+    {
+        
+        Motor.ApplyGravity();
+        if (!IsPerformingAction)
+        {
+            if(!_lockRotation) Motor.Rotate(RotationSpeed);
+            if (input.moveInput != Vector2.zero)
+            {
+                Motor.Move(input.moveInput, _currentSpeed);
+            }
+        }
+        _cameraService.CameraControl();
     }
     private void OnJump()
     {
@@ -147,5 +165,9 @@ public class PlayerController : MonoBehaviour
 
         _isFreeLook = false;
     }
-    
+
+    public void TakeDamage(float amount)
+    {
+        Health.TakeDamage(amount);
+    }
 }

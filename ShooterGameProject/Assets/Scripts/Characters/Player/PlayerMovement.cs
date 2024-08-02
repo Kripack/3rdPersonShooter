@@ -19,40 +19,11 @@ public class PlayerMovement : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
     }
-
-    public void Move(Vector2 moveInput, float speed, float speedMultiplier = 1f)
-    {
-        Vector3 forwardVel = transform.forward * moveInput.y;
-        Vector3 horizontalVel = transform.right * moveInput.x;
-
-        var moveDirection = (forwardVel + horizontalVel).normalized;
-        moveDirection.y = 0f;
-
-        transform.position += moveDirection * (speed * speedMultiplier * Time.deltaTime);
-    }
-    public void Rotate(float rotationSpeed)
-    {
-        Vector3 targetDirection = cameraObject.forward;
-        targetDirection.y = 0f;
-        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-        Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
-        
-        transform.rotation = playerRotation;
-    }
-    public void RotateToMoveDir(Vector2 moveInput)
-    {
-        Vector3 rotateDirection = transform.forward * moveInput.y;
-        rotateDirection += transform.right * moveInput.x;
-        rotateDirection.y = 0f;
-        rotateDirection.Normalize();
-
-        Quaternion targetRotation = Quaternion.LookRotation(rotateDirection);
-        transform.rotation = targetRotation;
-    }
     public bool IsGrounded()
     {
         return Physics.CheckSphere(transform.position, groundDistance, groundMask);
     }
+    
     public void ApplyGravity()
     {
         _rb.AddForce(instantGravity * Vector3.down);
@@ -63,6 +34,40 @@ public class PlayerMovement : MonoBehaviour
         }
         else inAirTimer = 0;
     }
+    
+    public void Move(Vector2 moveInput, float speed, float speedMultiplier = 1f)
+    {
+        var forwardVel = transform.forward * moveInput.y;
+        var horizontalVel = transform.right * moveInput.x;
+
+        var moveDirection = (forwardVel + horizontalVel).normalized;
+        moveDirection.y = 0f;
+
+        _rb.MovePosition(_rb.position + moveDirection * (speed * speedMultiplier * Time.deltaTime));
+        //transform.position += moveDirection * (speed * speedMultiplier * Time.deltaTime);
+    }
+    
+    public void Rotate(float rotationSpeed)
+    {
+        var targetDirection = cameraObject.forward;
+        targetDirection.y = 0f;
+        var targetRotation = Quaternion.LookRotation(targetDirection);
+        var playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+        
+        transform.rotation = playerRotation;
+    }
+    
+    public void RotateToMoveDir(Vector2 moveInput)
+    {
+        var rotateDirection = transform.forward * moveInput.y;
+        rotateDirection += transform.right * moveInput.x;
+        rotateDirection.y = 0f;
+        rotateDirection.Normalize();
+
+        var targetRotation = Quaternion.LookRotation(rotateDirection);
+        transform.rotation = targetRotation;
+    }
+    
     public void Jump()
     {
         _rb.AddForce(Vector3.up * jumpingForce, ForceMode.Impulse);

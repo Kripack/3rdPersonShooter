@@ -1,49 +1,80 @@
-using System;
 using UnityEngine;
 using UnityEngine.AI;
+
 [RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour, IDamageable
 {
-    [SerializeField] private EnemyData data;
-    private Health _health;
+    [field: SerializeField] public EnemyData Data { get; private set; }
+    public CountdownTimer AttackTimer { get; private set; }
+    
+    #region State Machine
+
+    public EnemyWanderState WanderState { get; private set; }
+    public EnemyChaseState ChaseState { get; private set; }
+    public EnemyAttackState AttackState { get; private set; }
+    
     private StateMachine _stateMachine;
+
+    #endregion    
+
+    private PlayerDetector _detector;
+    private Health _health;
     private NavMeshAgent _agent;
     private Animator _animator;
-    private EnemyBaseState _wanderState;
-
+    private bool _died;
     private void Awake()
     {
         _stateMachine = new StateMachine();
-        _health = new Health(data.maxHp);
+        _health = new Health(Data.maxHp);
+        _detector = new PlayerDetector(GameObject.FindGameObjectWithTag("Player").transform, transform, Data);
+        AttackTimer = new CountdownTimer(Data.attackRate);
     }
 
     private void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
-        _agent.speed = data.speed;
+        _agent.updatePosition = false;
+        _agent.speed = Data.speed;
         _animator = GetComponentInChildren<Animator>();
         
-        _wanderState = new EnemyWanderState(_stateMachine, _animator, _agent, this, 10f);
-        _stateMachine.SetState(_wanderState);
+        WanderState = new EnemyWanderState(_stateMachine, _animator, _agent, this, _detector);
+        ChaseState = new EnemyChaseState(_stateMachine, _animator, _agent, this, _detector);
+        AttackState = new EnemyAttackState(_stateMachine, _animator, _agent, this, _detector);
+        _stateMachine.SetState(WanderState);
     }
 
     private void Update()
     {
-        //_stateMachine.Update();
+        AttackTimer.Tick(Time.deltaTime);
+        if(!_died) _stateMachine.Update();
     }
 
     private void FixedUpdate()
     {
-        _stateMachine.Update();
+        Move(_agent.desiredVelocity);
     }
 
+    public void Attack()
+    {
+        Debug.Log("Attack Player!");
+        _detector.Player.GetComponent<PlayerController>().TakeDamage(Data.damage);
+    }
     public void TakeDamage(float amount)
     {
         _health.TakeDamage(amount);
     }
+    private void Move(Vector3 desiredVelocity)
+    {
+        transform.position += desiredVelocity * Time.deltaTime;
+    }
     private void Die()
     {
-        return;
+        int dieHash = Animator.StringToHash("Die");
+        _animator.Play(dieHash, 0 , 0.1f);
+
+        _died = true;
+        _agent.isStopped = true;
+        Debug.Log(transform.name + "died.");
     }
 
     private void OnEnable()

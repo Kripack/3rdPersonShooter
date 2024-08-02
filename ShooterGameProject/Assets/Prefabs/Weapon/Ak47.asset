@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: AK-47
   damage: 10
-  fireRate: 9
+  fireRate: 10
   layerMask:
     serializedVersion: 2
     m_Bits: 9

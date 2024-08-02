@@ -8,23 +8,23 @@ public class IdleState : MovementState
 
     public override void OnEnter()
     {
-        Controller.SetSpeed(Controller.MoveSpeed);
+        controller.SetSpeed(controller.MoveSpeed);
     }
 
     public override void Update()
     {
-        if (Controller.IsPerformingAction) return;
-        if (Controller.input.moveInput != Vector2.zero)
+        if (controller.IsPerformingAction) return;
+        if (controller.input.moveInput != Vector2.zero)
         {
-            if(Controller.input.sprint == true)
+            if(controller.input.sprint == true)
             {
-                StateMachine.SetState(Controller.RunningState);
+                stateMachine.SetState(controller.RunningState);
             }
-            else StateMachine.SetState(Controller.WalkingState);
+            else stateMachine.SetState(controller.WalkingState);
         }
-        if (Controller.input.crouch == true)
+        if (controller.input.crouch == true)
         {
-            StateMachine.SetState(Controller.CrouchingState);
+            stateMachine.SetState(controller.CrouchingState);
         }
     }
 }

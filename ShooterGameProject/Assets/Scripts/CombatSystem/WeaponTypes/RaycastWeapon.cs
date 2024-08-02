@@ -4,31 +4,36 @@ public class RaycastWeapon : RangedWeapon
 {
     public override void Attack(float damageMultiplier)
     {
-        if (CombatSystemController.AmmoManager.UseAmmo(RangeData.ammoType))
+        if (combatSystemController.AmmoManager.UseAmmo(rangeData.ammoType))
         {
             ReactOnPrimaryAttack();
             
             VisualFXManager.instance.PlayParticleSystem(muzzleFlash);
-            SoundFXManager.instance.PlaySoundClip(RangeData.shootingSound, WeaponAudioSource);
-            SoundFXManager.instance.PlayRandomSoundClip(RangeData.bulletShellsSound, WeaponAudioSource);
+            SoundFXManager.instance.PlaySoundClip(rangeData.shootingSound, weaponAudioSource);
+            SoundFXManager.instance.PlayRandomSoundClip(rangeData.bulletShellsSound, weaponAudioSource);
 
             RaycastShoot();
         }
         else
         {
-            SoundFXManager.instance.PlaySoundClip(RangeData.emptyMagazineSound, WeaponAudioSource);
+            SoundFXManager.instance.PlaySoundClip(rangeData.emptyMagazineSound, weaponAudioSource);
             StartReload();
         }
     }
 
     private void RaycastShoot()
     {
-        var direction = RangeData.useRecoil ? FPSCam.transform.forward + CalculateSpread() : FPSCam.transform.forward;
-        if (Physics.Raycast(FPSCam.transform.position, direction, out RaycastHit hit, RangeData.range, RangeData.layerMask))
+        var direction = rangeData.useRecoil ? fpsCam.transform.forward + CalculateSpread() : fpsCam.transform.forward;
+        if (Physics.Raycast(fpsCam.transform.position, direction, out RaycastHit hit, rangeData.range, rangeData.layerMask))
         {
             Debug.Log(hit.transform.name);
+            if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
+            {
+                damageable.TakeDamage(weaponData.damage);
+            }
+            
             var impactRotation = Quaternion.LookRotation(hit.normal);
-            CreateImpact(RangeData.impactEffect, hit.point, impactRotation);
+            CreateImpact(rangeData.impactEffect, hit, impactRotation);
         }
     }
 
@@ -36,9 +41,9 @@ public class RaycastWeapon : RangedWeapon
     {
         return new Vector3
         {
-            x = Random.Range(-RangeData.recoilFactor, RangeData.recoilFactor),
-            y = Random.Range(-RangeData.recoilFactor, RangeData.recoilFactor),
-            z = Random.Range(-RangeData.recoilFactor, RangeData.recoilFactor)
+            x = Random.Range(-rangeData.recoilFactor, rangeData.recoilFactor),
+            y = Random.Range(-rangeData.recoilFactor, rangeData.recoilFactor),
+            z = Random.Range(-rangeData.recoilFactor, rangeData.recoilFactor)
         };
     }
 }

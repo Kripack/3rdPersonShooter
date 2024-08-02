@@ -10,32 +10,32 @@ public class RunningState : MovementState
 
     public override void OnEnter()
     {
-        Controller.CharacterAnimator.Animator.SetBool(Controller.CharacterAnimator.RunningBool, true);
-        Controller.SetSpeed(Controller.SprintSpeed);
-        _backSpeed = Controller.SprintSpeed / 2f;
-        Controller.CharacterAnimator.SetSpineAimWeight(Controller.CharacterAnimator.SpineAimSprintWeight);
+        controller.CharacterAnimator.Animator.SetBool(controller.CharacterAnimator.RunningBool, true);
+        controller.SetSpeed(controller.SprintSpeed);
+        _backSpeed = controller.SprintSpeed / 2f;
+        controller.CharacterAnimator.SetSpineAimWeight(controller.CharacterAnimator.SpineAimSprintWeight);
     }
 
     public override void Update()
     {
-        if (Controller.input.moveInput == Vector2.zero)
+        if (controller.input.moveInput == Vector2.zero)
         {
-            StateMachine.SetState(Controller.IdleState);
+            stateMachine.SetState(controller.IdleState);
         }
-        else if (Controller.input.sprint == false)
+        else if (controller.input.sprint == false)
         {
-            StateMachine.SetState(Controller.WalkingState);
+            stateMachine.SetState(controller.WalkingState);
         }
 
-        if (Controller.input.moveInput.y < 0)
+        if (controller.input.moveInput.y < 0)
         {
-            Controller.SetSpeed(_backSpeed);
+            controller.SetSpeed(_backSpeed);
         }
-        else Controller.SetSpeed(Controller.SprintSpeed);
+        else controller.SetSpeed(controller.SprintSpeed);
     }
     public override void OnExit()
     {
-        Controller.CharacterAnimator.Animator.SetBool(Controller.CharacterAnimator.RunningBool, false);
-        Controller.CharacterAnimator.SetSpineAimWeight(Controller.CharacterAnimator.SpineAimWeight);
+        controller.CharacterAnimator.Animator.SetBool(controller.CharacterAnimator.RunningBool, false);
+        controller.CharacterAnimator.SetSpineAimWeight(controller.CharacterAnimator.SpineAimWeight);
     }
 }

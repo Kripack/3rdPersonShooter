@@ -1,10 +1,10 @@
 public abstract class BaseState
 {
-    protected StateMachine StateMachine;
+    protected StateMachine stateMachine;
 
     public BaseState(StateMachine stateMachine)
     {
-        StateMachine = stateMachine;
+        this.stateMachine = stateMachine;
     }
 
 

@@ -1,9 +1,9 @@
 public abstract class MovementState : BaseState 
 {
-    protected PlayerController Controller;
+    protected PlayerController controller;
     public MovementState(StateMachine stateMachine, PlayerController controller) : base(stateMachine)
     {
-        this.Controller = controller;
+        this.controller = controller;
     }
     
 }
