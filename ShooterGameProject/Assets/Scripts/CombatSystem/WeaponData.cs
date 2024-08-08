@@ -8,10 +8,11 @@ public class WeaponData : ScriptableObject
     public string weaponName;
     public float damage;
     public float fireRate;
-        
+    public float headShotMultiplier;
     public LayerMask layerMask;
     public GameObject prefab;
-
+    public ImpactEffectPreset impactEffectPreset;
+    
     [Header("Camera Shake Setting")]
     public float cameraShakeDuration;
     public float cameraShakeStrength;

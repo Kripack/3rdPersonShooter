@@ -26,24 +26,23 @@ public class RaycastWeapon : RangedWeapon
         var direction = rangeData.useRecoil ? fpsCam.transform.forward + CalculateSpread() : fpsCam.transform.forward;
         if (Physics.Raycast(fpsCam.transform.position, direction, out RaycastHit hit, rangeData.range, rangeData.layerMask))
         {
-            Debug.Log(hit.transform.name);
-            if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
+            if (hit.transform.CompareTag("Environment"))
             {
-                damageable.TakeDamage(weaponData.damage);
+                VisualFXManager.instance.SpawnImpactEffect(WeaponData.impactEffectPreset.environmentImpactEffect, hit);
+                
+                return;
             }
             
-            var impactRotation = Quaternion.LookRotation(hit.normal);
-            CreateImpact(rangeData.impactEffect, hit, impactRotation);
+            if (hit.collider.TryGetComponent<IWeaponVisitor>(out var weaponVisitor))
+            {
+                Accept(weaponVisitor, hit);
+            }
         }
     }
+    
 
-    private Vector3 CalculateSpread()
+    private void Accept(IWeaponVisitor weaponVisitor, RaycastHit hit)
     {
-        return new Vector3
-        {
-            x = Random.Range(-rangeData.recoilFactor, rangeData.recoilFactor),
-            y = Random.Range(-rangeData.recoilFactor, rangeData.recoilFactor),
-            z = Random.Range(-rangeData.recoilFactor, rangeData.recoilFactor)
-        };
+        weaponVisitor.Visit(this, hit);
     }
 }

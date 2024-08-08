@@ -15,10 +15,12 @@ MonoBehaviour:
   weaponName: AK-47
   damage: 10
   fireRate: 10
+  headShotMultiplier: 3
   layerMask:
     serializedVersion: 2
     m_Bits: 9
   prefab: {fileID: 5726268224729769293, guid: 4f5f6d0e4311c9a48a67448d75bed711, type: 3}
+  impactEffectPreset: {fileID: 11400000, guid: 5671092fe322619458545675e4f78573, type: 2}
   cameraShakeDuration: 0.12
   cameraShakeStrength: 0.04
   easeMode: 31

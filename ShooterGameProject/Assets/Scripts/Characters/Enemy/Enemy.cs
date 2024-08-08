@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(Hitbox))]
 public class Enemy : MonoBehaviour, IDamageable
 {
     [field: SerializeField] public EnemyData Data { get; private set; }
@@ -22,6 +23,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private NavMeshAgent _agent;
     private Animator _animator;
     private bool _died;
+    
     private void Awake()
     {
         _stateMachine = new StateMachine();
@@ -35,6 +37,7 @@ public class Enemy : MonoBehaviour, IDamageable
         _agent = GetComponent<NavMeshAgent>();
         _agent.updatePosition = false;
         _agent.speed = Data.speed;
+        _agent.stoppingDistance = Data.attackRange - 0.25f;
         _animator = GetComponentInChildren<Animator>();
         
         WanderState = new EnemyWanderState(_stateMachine, _animator, _agent, this, _detector);
@@ -86,4 +89,5 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         _health.Die -= Die;
     }
+    
 }

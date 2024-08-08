@@ -15,10 +15,12 @@ MonoBehaviour:
   weaponName: M1911
   damage: 5
   fireRate: 3
+  headShotMultiplier: 3
   layerMask:
     serializedVersion: 2
     m_Bits: 9
   prefab: {fileID: 7782937078417749440, guid: ac288be8a8c560e4585184a2e72738d9, type: 3}
+  impactEffectPreset: {fileID: 11400000, guid: 5671092fe322619458545675e4f78573, type: 2}
   cameraShakeDuration: 0.12
   cameraShakeStrength: 0.04
   easeMode: 31

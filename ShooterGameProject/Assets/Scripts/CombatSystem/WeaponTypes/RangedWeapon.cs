@@ -6,9 +6,9 @@ public class RangedWeapon : Weapon
     [SerializeField] protected ParticleSystem muzzleFlash;
 
     protected RangedWeaponData rangeData;
-    public override Weapon Initialize(WeaponData data, CombatSystemController combatSystemController)
+    public override Weapon Initialize(WeaponData data, CombatSystemController cSystemController)
     {
-        base.Initialize(data, combatSystemController);
+        base.Initialize(data, cSystemController);
         
         characterAnimator.Animator.SetBool(characterAnimator.AimingBool, true);
 
@@ -56,6 +56,17 @@ public class RangedWeapon : Weapon
         var recoil = new Vector3(rangeData.bodyRecoilFactor, 0f, 0f);
         combatSystemController.ApplyBodyRecoil(recoil);
     }
+    
+    protected Vector3 CalculateSpread()
+    {
+        return new Vector3
+        {
+            x = Random.Range(-rangeData.recoilFactor, rangeData.recoilFactor),
+            y = Random.Range(-rangeData.recoilFactor, rangeData.recoilFactor),
+            z = Random.Range(-rangeData.recoilFactor, rangeData.recoilFactor)
+        };
+    }
+    
     private IEnumerator WeaponRigDelayOff(float delay)
     {
         characterAnimator.SetAimRigWeight(0f);
@@ -66,4 +77,5 @@ public class RangedWeapon : Weapon
         characterAnimator.SetAimRigWeight(1f);
         characterAnimator.SetHoldWeaponRigWeight(1f);
     }
+    
 }

@@ -8,7 +8,6 @@ public class CombatSystemController : MonoBehaviour
     public AmmoManager AmmoManager { get; private set; }
     public CharacterAnimator CharacterAnimator {  get; private set; }
     public Transform spawnPos;
-    public bool CanAttack { get; private set; }
     public bool WeaponEquiped { get; private set; }
     public WeaponSelector WeaponSelector { get; private set; }
     [SerializeField] private Transform weaponHolderFollow;
@@ -37,12 +36,11 @@ public class CombatSystemController : MonoBehaviour
         input.StartAutoAttack += OnStartAutoAttack;
         input.StopAutoAttack += OnStopAutoAttack;
 
-        CanAttack = true;
     }
 
     private void Attack()
     {
-        if (!CanAttack || _playerController.IsPerformingAction) return;
+        if (_playerController.IsPerformingAction) return;
         if (WeaponEquiped)
         {
             _activeWeapon.Attack(_damageMultiplier);
@@ -114,14 +112,6 @@ public class CombatSystemController : MonoBehaviour
         }
     }
     
-    public void ResetAttack()
-    {
-        CanAttack = true;
-    }
-    public void BanAttack()
-    {
-        CanAttack = false;
-    }
     public void SetEquipStatus(bool status)
     {
         WeaponEquiped = status;

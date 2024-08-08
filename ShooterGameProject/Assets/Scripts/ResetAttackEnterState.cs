@@ -10,7 +10,7 @@ public class ResetAttackEnterState : StateMachineBehaviour
         {
             _combatSystemController = animator.GetComponent<CombatSystemController>();
         }
-        _combatSystemController.ResetAttack();
+        //_combatSystemController.ResetAttack();
     }
 
 }

@@ -37,4 +37,16 @@ public class VisualFXManager : MonoBehaviour
             Debug.LogWarning("Attempted to play a particle system that is not set.");
         }
     }
+    
+    public void SpawnImpactEffect(GameObject impactObject ,Vector3 spawnPosition, Quaternion rotation)
+    {
+        var impact = Instantiate(impactObject, spawnPosition, rotation);
+    }
+    
+    public void SpawnImpactEffect(GameObject impactObject ,RaycastHit hit)
+    {
+        var impactRotation = Quaternion.LookRotation(hit.normal);
+        var impact = Instantiate(impactObject, hit.point, impactRotation);
+        impact.transform.parent = hit.transform;
+    }
 }

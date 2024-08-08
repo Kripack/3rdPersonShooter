@@ -18,7 +18,7 @@ MonoBehaviour:
   damage: 10
   attackRate: 4
   attackRange: 2
-  viewRadius: 10
+  viewRadius: 12
   innerViewRadius: 5
-  viewAngle: 70
-  wanderRadius: 20
+  viewAngle: 75
+  wanderRadius: 30
