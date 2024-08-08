@@ -16,8 +16,9 @@ MonoBehaviour:
   speed: 1
   chaseSpeedFactor: 2
   damage: 10
-  attackRate: 5
+  attackRate: 4
   attackRange: 2
+  attackArea: 0.5
   viewRadius: 12
   innerViewRadius: 5
   viewAngle: 75

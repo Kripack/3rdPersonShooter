@@ -14,7 +14,6 @@ public class EnemyChaseState : EnemyBaseState
     {
         animator.CrossFade(runHash, crossFadeDuration);
         agent.speed = _chaseSpeed;
-        Debug.Log("Chase state!");
     }
 
     public override void Update()
@@ -25,19 +24,21 @@ public class EnemyChaseState : EnemyBaseState
         if (!detectionTimer.IsRunning)
         {
             detectionTimer.Start();
-
-            if (!detector.CanDetectPlayer())
-            {
-                stateMachine.SetState(enemy.WanderState);
-                Debug.Log("To wander state");
-                return;
-            }
-
+            
             if (detector.CanAttackPlayer())
             {
                 stateMachine.SetState(enemy.AttackState);
                 Debug.Log("To attack state");
+                return;
             }
+            
+            if (!detector.CanDetectPlayer())
+            {
+                stateMachine.SetState(enemy.WanderState);
+                Debug.Log("To wander state");
+            }
+
+
         }
     }
 }

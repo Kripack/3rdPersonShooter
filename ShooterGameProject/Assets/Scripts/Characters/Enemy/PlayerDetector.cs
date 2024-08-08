@@ -4,14 +4,14 @@ public class PlayerDetector
 {
     public Transform Player { get; private set; }
     public Health PlayerHealth { get; private set; }
-    public Transform DetectorTransform { get; private set; }
+    public Transform Origin { get; private set; }
     private IDetectionStrategy _detectionStrategy;
     private readonly float _attackRange;
     
-    public PlayerDetector(Transform player, Transform detectorTransform, EnemyData data)
+    public PlayerDetector(Transform player, Transform origin, EnemyData data)
     {
         Player = player;
-        DetectorTransform = detectorTransform;
+        Origin = origin;
         PlayerHealth = player.GetComponent<PlayerController>().Health;
         _attackRange = data.attackRange;
         _detectionStrategy = new ConeDetectionStrategy(data.viewRadius, data.innerViewRadius, data.viewAngle);
@@ -19,12 +19,12 @@ public class PlayerDetector
     
     public bool CanDetectPlayer()
     {
-        return _detectionStrategy.Execute(Player, DetectorTransform);
+        return _detectionStrategy.Execute(Player, Origin);
     }
 
     public bool CanAttackPlayer() 
     {
-        var directionToPlayer = Player.position - DetectorTransform.position;
+        var directionToPlayer = Player.position - Origin.position;
         return directionToPlayer.magnitude <= _attackRange;
     }
         

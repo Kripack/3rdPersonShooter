@@ -10,7 +10,7 @@ public class EnemyWanderState : EnemyBaseState
     public EnemyWanderState(StateMachine stateMachine, Animator animator, NavMeshAgent agent, Enemy enemy, PlayerDetector detector) : base(
             stateMachine, animator, agent, enemy, detector)
     {
-        _startPoint = detector.DetectorTransform.position;
+        _startPoint = detector.Origin.position;
         _wanderRadius = enemy.Data.wanderRadius;
         _wanderSpeed = enemy.Data.WanderSpeed;
     }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,6 +7,7 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour, IDamageable
 {
     [field: SerializeField] public EnemyData Data { get; private set; }
+    [SerializeField] private LayerMask attackMask;
     public CountdownTimer AttackTimer { get; private set; }
     
     #region State Machine
@@ -16,13 +18,16 @@ public class Enemy : MonoBehaviour, IDamageable
     
     private StateMachine _stateMachine;
 
-    #endregion    
+    #endregion
 
+    public BaseLocomotion _locomotion;
     private PlayerDetector _detector;
+    private IAttackStrategy _attackStrategy;
     private Health _health;
     private NavMeshAgent _agent;
     private Animator _animator;
     private bool _died;
+    private int _dieHash;
     
     private void Awake()
     {
@@ -30,6 +35,8 @@ public class Enemy : MonoBehaviour, IDamageable
         _health = new Health(Data.maxHp);
         _detector = new PlayerDetector(GameObject.FindGameObjectWithTag("Player").transform, transform, Data);
         AttackTimer = new CountdownTimer(Data.attackRate);
+        _attackStrategy = new SphereCastStrategy(attackMask, Data.attackArea);
+        _locomotion = new BaseLocomotion();
     }
 
     private void Start()
@@ -39,6 +46,7 @@ public class Enemy : MonoBehaviour, IDamageable
         _agent.speed = Data.speed;
         _agent.stoppingDistance = Data.attackRange - 0.25f;
         _animator = GetComponentInChildren<Animator>();
+        _dieHash = Animator.StringToHash("Die");
         
         WanderState = new EnemyWanderState(_stateMachine, _animator, _agent, this, _detector);
         ChaseState = new EnemyChaseState(_stateMachine, _animator, _agent, this, _detector);
@@ -54,30 +62,31 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        Move(_agent.desiredVelocity);
+        _locomotion.Move(transform, _agent.desiredVelocity);
     }
 
     public void Attack()
     {
-        Debug.Log("Attack Player!");
-        _detector.Player.GetComponent<PlayerController>().TakeDamage(Data.damage);
+        var hitCollider = _attackStrategy.Execute(transform.position + Vector3.up, transform.forward, Data.attackRange);
+        if (hitCollider?.TryGetComponent<IDamageable>(out var damageable) == true)
+        {
+            damageable.TakeDamage(Data.damage);
+            Debug.Log(transform.name + " deal " + Data.damage + " to Player!");
+        }
+        
     }
     public void TakeDamage(float amount)
     {
         _health.TakeDamage(amount);
     }
-    private void Move(Vector3 desiredVelocity)
-    {
-        transform.position += desiredVelocity * Time.deltaTime;
-    }
+
     private void Die()
     {
-        int dieHash = Animator.StringToHash("Die");
-        _animator.Play(dieHash, 0 , 0.1f);
-
+        _animator.Play(_dieHash, 0 , 0.1f);
+        
+        GetComponent<Collider>().enabled = false; // ?
         _died = true;
         _agent.isStopped = true;
-        Debug.Log(transform.name + "died.");
     }
 
     private void OnEnable()
@@ -88,6 +97,24 @@ public class Enemy : MonoBehaviour, IDamageable
     private void OnDisable()
     {
         _health.Die -= Die;
+    }
+    
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, Data.attackArea);
+
+        if (Physics.SphereCast(transform.position + Vector3.up, Data.attackArea, transform.forward, out var hit, Data.attackRange, attackMask))
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(hit.point, Data.attackArea);
+            Gizmos.DrawLine(transform.position, hit.point);
+        }
+        else
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(transform.position, transform.forward * Data.attackRange);
+        }
     }
     
 }

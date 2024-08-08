@@ -10,7 +10,6 @@ public class EnemyAttackState : EnemyBaseState
 
     public override void OnEnter()
     {
-        Debug.Log("Attack state");
         animator.CrossFade(idleHash, crossFadeDuration);
     }
 
@@ -32,9 +31,13 @@ public class EnemyAttackState : EnemyBaseState
         agent.SetDestination(detector.Player.position);
         if (!enemy.AttackTimer.IsRunning)
         {
+            Vector3 direction = detector.Player.position - detector.Origin.position;
+            direction.y = 0f;
+            //enemy.Rotate(direction);
+            enemy.StartCoroutine(enemy._locomotion.RotateTowards(detector.Origin, direction, enemy.Data.rotationSpeed));
+            
             enemy.AttackTimer.Start();
             animator.Play(attackHash);
-            enemy.Attack();
         }
     }
 }

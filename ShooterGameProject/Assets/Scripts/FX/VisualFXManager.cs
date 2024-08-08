@@ -40,11 +40,15 @@ public class VisualFXManager : MonoBehaviour
     
     public void SpawnImpactEffect(GameObject impactObject ,Vector3 spawnPosition, Quaternion rotation)
     {
+        if(!impactObject) return;
+        
         var impact = Instantiate(impactObject, spawnPosition, rotation);
     }
     
     public void SpawnImpactEffect(GameObject impactObject ,RaycastHit hit)
     {
+        if(!impactObject) return;
+        
         var impactRotation = Quaternion.LookRotation(hit.normal);
         var impact = Instantiate(impactObject, hit.point, impactRotation);
         impact.transform.parent = hit.transform;

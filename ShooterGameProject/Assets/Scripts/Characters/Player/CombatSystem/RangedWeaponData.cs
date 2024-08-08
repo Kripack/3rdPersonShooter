@@ -17,6 +17,5 @@ public class RangedWeaponData : WeaponData
     public AudioClip reloadSound;
     public AudioClip[] bulletShellsSound;
     
-    public GameObject impactEffect;
     public AnimationClip reloadAnimation;
 }
