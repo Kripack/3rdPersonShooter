@@ -7,6 +7,7 @@ public class WeaponData : ScriptableObject
     [Header("Parameters")]
     public string weaponName;
     public float damage;
+    public float range;
     public float fireRate;
     public float headShotMultiplier;
     public LayerMask layerMask;

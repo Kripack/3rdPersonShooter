@@ -24,25 +24,25 @@ public class RaycastWeapon : RangedWeapon
     private void RaycastShoot()
     {
         var direction = rangeData.useRecoil ? fpsCam.transform.forward + CalculateSpread() : fpsCam.transform.forward;
-        if (Physics.Raycast(fpsCam.transform.position, direction, out RaycastHit hit, rangeData.range, rangeData.layerMask))
+        if (Physics.Raycast(fpsCam.transform.position, direction, out var hit, Data.range, Data.layerMask))
         {
             if (hit.transform.CompareTag("Environment"))
             {
-                VisualFXManager.instance.SpawnImpactEffect(WeaponData.impactEffectPreset.environmentImpactEffect, hit);
+                VisualFXManager.instance.SpawnImpactEffect(Data.impactEffectPreset.environmentImpactEffect, hit);
                 
                 return;
             }
             
-            if (hit.collider.TryGetComponent<IWeaponVisitor>(out var weaponVisitor))
+            if (hit.collider.TryGetComponent<IAttackVisitor>(out var attackVisitor))
             {
-                Accept(weaponVisitor, hit);
+                AcceptAttack(attackVisitor, hit);
             }
         }
     }
     
 
-    private void Accept(IWeaponVisitor weaponVisitor, RaycastHit hit)
+    private void AcceptAttack(IAttackVisitor attackVisitor, RaycastHit hit)
     {
-        weaponVisitor.Visit(this, hit);
+        attackVisitor.Visit(this, hit);
     }
 }

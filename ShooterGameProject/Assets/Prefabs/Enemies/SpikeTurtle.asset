@@ -12,14 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02615818867bdf44aae82b7c1928bfe8, type: 3}
   m_Name: SpikeTurtle
   m_EditorClassIdentifier: 
+  bodyType: 0
+  impactEffectPreset: {fileID: 11400000, guid: df2669cfa96195440a6fe87d07ce0d16, type: 2}
   maxHp: 40
   speed: 1
-  chaseSpeedFactor: 2
+  chaseSpeedFactor: 1.5
+  rotationSpeed: 1
   damage: 10
   attackRate: 4
   attackRange: 2
   attackArea: 0.5
-  viewRadius: 12
+  viewRadius: 15
   innerViewRadius: 5
-  viewAngle: 75
+  viewAngle: 70
   wanderRadius: 30
+  detectionCooldown: 0.5

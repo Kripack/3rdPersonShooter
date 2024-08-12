@@ -3,6 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObjects/EnemyData")]
 public class EnemyData : ScriptableObject
 {
+    public BodyType bodyType;
+    public ImpactEffectPreset impactEffectPreset;
+    
     public float maxHp;
     public float speed;
     public float chaseSpeedFactor;
@@ -17,5 +20,5 @@ public class EnemyData : ScriptableObject
     public float innerViewRadius;
     public float viewAngle;
     public float wanderRadius;
- 
+    public float detectionCooldown = 1f;
 }

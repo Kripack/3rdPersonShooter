@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour, IDamageable
     [field: SerializeField] public EnemyData Data { get; private set; }
     [SerializeField] private LayerMask attackMask;
     public CountdownTimer AttackTimer { get; private set; }
+    public BaseLocomotion Locomotion { get; private set; }
     
     #region State Machine
 
@@ -19,16 +20,17 @@ public class Enemy : MonoBehaviour, IDamageable
     private StateMachine _stateMachine;
 
     #endregion
-
-    public BaseLocomotion _locomotion;
+    
     private PlayerDetector _detector;
     private IAttackStrategy _attackStrategy;
     private Health _health;
     private NavMeshAgent _agent;
     private Animator _animator;
+    private Hitbox _hitbox;
     private bool _died;
     private int _dieHash;
-    
+    private int _hitHash;
+
     private void Awake()
     {
         _stateMachine = new StateMachine();
@@ -36,17 +38,20 @@ public class Enemy : MonoBehaviour, IDamageable
         _detector = new PlayerDetector(GameObject.FindGameObjectWithTag("Player").transform, transform, Data);
         AttackTimer = new CountdownTimer(Data.attackRate);
         _attackStrategy = new SphereCastStrategy(attackMask, Data.attackArea);
-        _locomotion = new BaseLocomotion();
+        Locomotion = new BaseLocomotion(transform);
+        _hitbox = GetComponent<Hitbox>();
+        _animator = GetComponentInChildren<Animator>();
+        _agent = GetComponent<NavMeshAgent>();
     }
 
     private void Start()
     {
-        _agent = GetComponent<NavMeshAgent>();
         _agent.updatePosition = false;
         _agent.speed = Data.speed;
-        _agent.stoppingDistance = Data.attackRange - 0.25f;
-        _animator = GetComponentInChildren<Animator>();
+        _agent.stoppingDistance = Data.attackRange - 0.5f;
         _dieHash = Animator.StringToHash("Die");
+        _hitHash = Animator.StringToHash("GetHit");
+        _hitbox.SetBodyType(Data.bodyType);
         
         WanderState = new EnemyWanderState(_stateMachine, _animator, _agent, this, _detector);
         ChaseState = new EnemyChaseState(_stateMachine, _animator, _agent, this, _detector);
@@ -62,28 +67,41 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        _locomotion.Move(transform, _agent.desiredVelocity);
+        Locomotion.MoveTo(_agent.nextPosition);
     }
 
     public void Attack()
     {
-        var hitCollider = _attackStrategy.Execute(transform.position + Vector3.up, transform.forward, Data.attackRange);
-        if (hitCollider?.TryGetComponent<IDamageable>(out var damageable) == true)
+        var hit = _attackStrategy.Execute(transform.position + Vector3.up, transform.forward, Data.attackRange);
+        if (hit.collider == null) return;
+        if (hit.collider.TryGetComponent<IAttackVisitor>(out var attackVisitor) == true)
         {
-            damageable.TakeDamage(Data.damage);
+            AcceptAttack(attackVisitor, hit);
             Debug.Log(transform.name + " deal " + Data.damage + " to Player!");
         }
         
     }
+
+    private void AcceptAttack(IAttackVisitor attackVisitor, RaycastHit hit)
+    {
+        attackVisitor.Visit(this, hit);
+    }
+    
     public void TakeDamage(float amount)
     {
         _health.TakeDamage(amount);
     }
 
+    private void OnHit()
+    {
+        _animator.Play(_hitHash, 0 , 0.1f);
+    }
+    
     private void Die()
     {
         _animator.Play(_dieHash, 0 , 0.1f);
-        
+
+        _agent.baseOffset = 0f;
         GetComponent<Collider>().enabled = false; // ?
         _died = true;
         _agent.isStopped = true;
@@ -92,14 +110,16 @@ public class Enemy : MonoBehaviour, IDamageable
     private void OnEnable()
     {
         _health.Die += Die;
+        _hitbox.OnHit += OnHit;
     }
 
     private void OnDisable()
     {
         _health.Die -= Die;
+        _hitbox.OnHit -= OnHit;
     }
     
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, Data.attackArea);

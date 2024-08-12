@@ -2,5 +2,5 @@
 
 public interface IAttackStrategy
 {
-    Collider Execute(Vector3 origin, Vector3 direction, float maxDistance);
+    RaycastHit Execute(Vector3 origin, Vector3 direction, float maxDistance);
 }

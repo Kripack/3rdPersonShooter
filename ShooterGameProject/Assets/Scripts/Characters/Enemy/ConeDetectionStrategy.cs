@@ -15,8 +15,6 @@ public class ConeDetectionStrategy : IDetectionStrategy
         
     public bool Execute(Transform player, Transform detector) 
     {
-        Debug.Log("Player detection call."); // debug
-            
         var directionToPlayer = player.position - detector.position;
         var angleToPlayer = Vector3.Angle(directionToPlayer, detector.forward);
         

@@ -3,25 +3,54 @@ using UnityEngine;
 
 public class BaseLocomotion
 {
-    public IEnumerator RotateTowards(Transform origin, Vector3 targetDirection, float rotationSpeed)
-    {
-        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+    private readonly Transform _origin;
+    private bool _stopped;
 
-        while (Quaternion.Angle(origin.rotation, targetRotation) > 0.1f)
+    public BaseLocomotion(Transform transform)
+    {
+        _origin = transform;
+    }
+    public IEnumerator RotateTowards(Vector3 targetDirection, float rotationSpeed)
+    {
+        var targetRotation = Quaternion.LookRotation(targetDirection);
+
+        while (Quaternion.Angle(_origin.rotation, targetRotation) > 0.1f)
         {
-            origin.rotation = Quaternion.Slerp(
-                origin.rotation, 
+            _origin.rotation = Quaternion.Slerp(
+                _origin.rotation, 
                 targetRotation, 
-                rotationSpeed * Time.deltaTime
-            );
+                rotationSpeed * Time.fixedDeltaTime);
 
             yield return null;
         }
 
-        origin.rotation = targetRotation;
+        _origin.rotation = targetRotation;
     }
-    public void Move(Transform origin,Vector3 velocity)
+
+    public void Rotate(Vector3 targetDirection, float rotationSpeed)
     {
-        origin.position += velocity * Time.deltaTime;
+        var targetRotation = Quaternion.LookRotation(targetDirection);
+        
+        _origin.rotation = Quaternion.Slerp(
+            _origin.rotation,
+            targetRotation,
+            rotationSpeed + Time.fixedDeltaTime);
+    }
+    
+    public void Move(Vector3 velocity)
+    {
+        if (_stopped) return;
+        _origin.position += velocity * Time.fixedDeltaTime;
+    }
+
+    public void MoveTo(Vector3 position)
+    {
+        if (_stopped) return;
+        _origin.position = position;
+    }
+
+    public void Stopped(bool status)
+    {
+        _stopped = status;
     }
 }

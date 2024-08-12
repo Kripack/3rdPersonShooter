@@ -5,7 +5,6 @@ public class RangedWeaponData : WeaponData
 {
     [Header("Range Weapon Parameters")]
     public AmmoType ammoType;
-    public float range;
     public float reloadTime;
     public bool useRecoil;
     public float recoilFactor;

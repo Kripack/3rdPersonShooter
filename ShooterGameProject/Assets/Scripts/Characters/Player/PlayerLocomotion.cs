@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerLocomotion : MonoBehaviour
 {
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float groundDistance;

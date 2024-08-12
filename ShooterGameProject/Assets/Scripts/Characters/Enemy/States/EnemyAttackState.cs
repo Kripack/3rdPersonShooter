@@ -11,10 +11,25 @@ public class EnemyAttackState : EnemyBaseState
     public override void OnEnter()
     {
         animator.CrossFade(idleHash, crossFadeDuration);
+        agent.updateRotation = false;
+        agent.isStopped = true;
     }
 
     public override void Update()
     {
+        agent.SetDestination(detector.Player.position);
+        
+        Vector3 direction = detector.Player.position - detector.Origin.position;
+        direction.y = 0f;
+        enemy.Locomotion.Rotate(direction, enemy.Data.rotationSpeed);
+        
+        if (!enemy.AttackTimer.IsRunning)
+        {
+            enemy.AttackTimer.Start();
+            animator.Play(attackHash);
+            return;
+        }
+        
         detectionTimer.Tick(Time.deltaTime);
         if (!detectionTimer.IsRunning)
         {
@@ -24,20 +39,13 @@ public class EnemyAttackState : EnemyBaseState
             {
                 stateMachine.SetState(enemy.ChaseState); 
                 Debug.Log("To chasing state");
-                return;
             }
         }
-        
-        agent.SetDestination(detector.Player.position);
-        if (!enemy.AttackTimer.IsRunning)
-        {
-            Vector3 direction = detector.Player.position - detector.Origin.position;
-            direction.y = 0f;
-            //enemy.Rotate(direction);
-            enemy.StartCoroutine(enemy._locomotion.RotateTowards(detector.Origin, direction, enemy.Data.rotationSpeed));
-            
-            enemy.AttackTimer.Start();
-            animator.Play(attackHash);
-        }
+    }
+
+    public override void OnExit()
+    {
+        agent.updateRotation = true;
+        agent.isStopped = false;
     }
 }

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8315341891325619028}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: BottomEyeCover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6473805062664277960}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Side_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2215666708140478569}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: EyeBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1380007190798132506}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,7 +134,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6257492867863057946}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: EyeCTRL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168,8 +168,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8170479561676033040}
-  - component: {fileID: 2662588165459944745}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: SlimePolyart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,27 +192,6 @@ Transform:
   - {fileID: 8408706332325375723}
   m_Father: {fileID: 9068784818193201785}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &2662588165459944745
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4551643005515901011}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 56fc0b4f7d154039a7099564596a545b, type: 3}
-  m_Controller: {fileID: 9100000, guid: 9bbcf96c9a254c5ba654027c656d7b39, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5296274924984865108
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,7 +201,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7323437292494722033}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Spine01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -257,7 +235,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2950544406840721112}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Side_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -292,7 +270,8 @@ GameObject:
   - component: {fileID: 7261960920904698792}
   - component: {fileID: 4694925614545623849}
   - component: {fileID: 579387097765641023}
-  m_Layer: 3
+  - component: {fileID: 5733067511091850362}
+  m_Layer: 7
   m_Name: Slime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -366,7 +345,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -386,6 +365,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7322a74df5f711469eb57156449c376, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &5733067511091850362
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6165350037591407038}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 56fc0b4f7d154039a7099564596a545b, type: 3}
+  m_Controller: {fileID: 9100000, guid: 9bbcf96c9a254c5ba654027c656d7b39, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6456002187936590622
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,7 +395,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3230921602361160932}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -429,7 +429,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8408706332325375723}
   - component: {fileID: 8212400384037620871}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Slime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -523,7 +523,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5192823504631150788}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Crown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -554,7 +554,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6494795269102893783}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: UpperEyeCover
   m_TagString: Untagged
   m_Icon: {fileID: 0}

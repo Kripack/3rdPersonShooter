@@ -11,12 +11,13 @@ public class SphereCastStrategy : IAttackStrategy
         _layerMask = layerMask;
     }
     
-    public Collider Execute(Vector3 origin, Vector3 direction, float maxDistance)
+    public RaycastHit Execute(Vector3 origin, Vector3 direction, float maxDistance)
     {
         if (Physics.SphereCast(origin, _sphereRadius, direction, out var hit, maxDistance, _layerMask))
         {
-            return hit.collider;
+            return hit;
         }
-        return null;
+
+        return default;
     }
 }

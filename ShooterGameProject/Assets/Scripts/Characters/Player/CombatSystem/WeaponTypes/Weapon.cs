@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class Weapon : MonoBehaviour
 {
-    public WeaponData WeaponData { get; private set; }
+    public WeaponData Data { get; private set; }
     
     [SerializeField] private Transform leftHandIKTarget;
     [SerializeField] private Transform leftHandHint;
@@ -20,7 +20,7 @@ public class Weapon : MonoBehaviour
         characterAnimator = cSystemController.CharacterAnimator;
         weaponAudioSource = GetComponent<AudioSource>();
         fpsCam = Camera.main;
-        WeaponData = data;
+        Data = data;
         
         characterAnimator.SetLeftHandIKTarget(leftHandIKTarget, leftHandHint);
 
@@ -55,7 +55,7 @@ public class Weapon : MonoBehaviour
     
     protected virtual void ReactOnPrimaryAttack()
     {
-        CameraService.instance.ShakeCamera(WeaponData.cameraShakeDuration, WeaponData.cameraShakeStrength, WeaponData.easeMode);
+        CameraService.instance.ShakeCamera(Data.cameraShakeDuration, Data.cameraShakeStrength, Data.easeMode);
     }
     
 }

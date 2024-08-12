@@ -19,6 +19,9 @@ public class EnemyChaseState : EnemyBaseState
     public override void Update()
     {
         agent.SetDestination(detector.Player.position);
+        // var targetRotation = agent.nextPosition - detector.Origin.position;
+        // targetRotation.y = 0f;
+        // enemy.Locomotion.Rotate(targetRotation, enemy.Data.rotationSpeed);
         
         detectionTimer.Tick(Time.deltaTime);
         if (!detectionTimer.IsRunning)
@@ -37,8 +40,6 @@ public class EnemyChaseState : EnemyBaseState
                 stateMachine.SetState(enemy.WanderState);
                 Debug.Log("To wander state");
             }
-
-
         }
     }
 }

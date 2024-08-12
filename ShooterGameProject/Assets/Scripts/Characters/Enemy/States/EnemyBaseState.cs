@@ -22,7 +22,7 @@ public abstract class EnemyBaseState : BaseState
     {
         this.animator = animator;
         this.agent = agent;
-        detectionTimer = new CountdownTimer(1f);
+        detectionTimer = new CountdownTimer(enemy.Data.detectionCooldown);
         this.detector = detector;
         this.enemy = enemy;
     }
