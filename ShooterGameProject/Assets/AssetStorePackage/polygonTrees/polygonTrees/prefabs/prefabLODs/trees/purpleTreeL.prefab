@@ -59,11 +59,11 @@ PrefabInstance:
     - target: {fileID: -1507636103597937308, guid: b3c2b23919fdfff969ab35ad9c5ddb37, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ed47b9635f4db2e12829f7923f19d0a3, type: 2}
+      objectReference: {fileID: 2100000, guid: bd6ebc51b46cd45828e900cd39022151, type: 2}
     - target: {fileID: -1507636103597937308, guid: b3c2b23919fdfff969ab35ad9c5ddb37, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 5b522fe9122127e7ba567780f539da47, type: 2}
+      objectReference: {fileID: 2100000, guid: c3ca41640477d73ed9cc18149d341001, type: 2}
     - target: {fileID: 919132149155446097, guid: b3c2b23919fdfff969ab35ad9c5ddb37, type: 3}
       propertyPath: m_Name
       value: purpleTreeL

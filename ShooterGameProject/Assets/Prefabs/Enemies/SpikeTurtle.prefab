@@ -1212,7 +1212,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 502122990531848208}
-  - component: {fileID: 3158197667819011544}
   m_Layer: 7
   m_Name: TurtleShellPolyart
   m_TagString: Untagged
@@ -1237,24 +1236,3 @@ Transform:
   - {fileID: 574906137105758242}
   m_Father: {fileID: 5249186161665775777}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &3158197667819011544
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8996064250417166923}
-  m_Enabled: 0
-  m_Avatar: {fileID: 9000000, guid: 942e6d5330e147fe84c5ab6ab2193ca1, type: 3}
-  m_Controller: {fileID: 9100000, guid: 1f68948a5bb74f2fa9e9087a872750e9, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0

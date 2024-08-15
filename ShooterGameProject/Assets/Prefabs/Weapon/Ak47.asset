@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: AK-47
   damage: 10
-  range: 100
+  range: 500
   fireRate: 10
   headShotMultiplier: 3
   layerMask:

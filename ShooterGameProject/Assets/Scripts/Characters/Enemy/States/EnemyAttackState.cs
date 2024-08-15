@@ -38,7 +38,6 @@ public class EnemyAttackState : EnemyBaseState
             if (!detector.CanAttackPlayer())
             {
                 stateMachine.SetState(enemy.ChaseState); 
-                Debug.Log("To chasing state");
             }
         }
     }
@@ -48,4 +47,5 @@ public class EnemyAttackState : EnemyBaseState
         agent.updateRotation = true;
         agent.isStopped = false;
     }
+    
 }

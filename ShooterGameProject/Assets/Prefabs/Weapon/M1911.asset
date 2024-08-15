@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: M1911
   damage: 5
-  range: 100
+  range: 500
   fireRate: 3
   headShotMultiplier: 3
   layerMask:

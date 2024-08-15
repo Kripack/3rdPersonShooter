@@ -15,15 +15,15 @@ MonoBehaviour:
   bodyType: 0
   impactEffectPreset: {fileID: 11400000, guid: df2669cfa96195440a6fe87d07ce0d16, type: 2}
   maxHp: 60
-  speed: 1
+  speed: 1.25
   chaseSpeedFactor: 2
   rotationSpeed: 1
   damage: 10
   attackRate: 3
   attackRange: 2
   attackArea: 0.5
-  viewRadius: 15
-  innerViewRadius: 5
+  viewRadius: 25
+  innerViewRadius: 10
   viewAngle: 70
-  wanderRadius: 30
+  wanderRadius: 50
   detectionCooldown: 0.5

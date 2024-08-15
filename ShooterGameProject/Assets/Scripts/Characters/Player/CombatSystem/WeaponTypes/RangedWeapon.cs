@@ -16,7 +16,7 @@ public class RangedWeapon : Weapon
         {
             rangeData = (RangedWeaponData) data;
         }
-        else { Debug.LogError("This is a Ranged Weapon. The data file should be RangeWeaponData."); }
+        else { Debug.LogError("This is a Ranged Weapon. The data file should be RangeWeaponData."); } // як веде себе в білді?
 
         return this;
     }
@@ -33,8 +33,6 @@ public class RangedWeapon : Weapon
         isReloading = true;
 
         SoundFXManager.instance.PlaySoundClip(rangeData.reloadSound, weaponAudioSource);
-
-        Debug.Log("Reloading...");
         
         characterAnimator.Animator.SetTrigger(characterAnimator.ReloadTrigger);
         StartCoroutine(WeaponRigDelayOff(rangeData.reloadAnimation.length - 0.5f));
@@ -45,8 +43,6 @@ public class RangedWeapon : Weapon
         if (!isReloading) return;
         combatSystemController.AmmoManager.Reload(rangeData.ammoType);
         isReloading = false;
-        
-        Debug.Log("End Reloading.");
     }
 
     protected override void ReactOnPrimaryAttack()

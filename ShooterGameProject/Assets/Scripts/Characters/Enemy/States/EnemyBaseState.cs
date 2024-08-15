@@ -15,7 +15,7 @@ public abstract class EnemyBaseState : BaseState
     protected readonly int attackHash = Animator.StringToHash("Attack01");
     protected readonly int dieHash = Animator.StringToHash("Die");
     
-    protected const float crossFadeDuration = 0.1f;
+    protected const float crossFadeDuration = 0.2f;
     
     public EnemyBaseState(StateMachine stateMachine, Animator animator, NavMeshAgent agent, Enemy enemy, PlayerDetector detector)
         : base(stateMachine)

@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour, IDamageable
     [SerializeField] private LayerMask attackMask;
     public CountdownTimer AttackTimer { get; private set; }
     public BaseLocomotion Locomotion { get; private set; }
+    public Hitbox Hitbox { get; private set; }
     
     #region State Machine
 
@@ -26,7 +27,6 @@ public class Enemy : MonoBehaviour, IDamageable
     private Health _health;
     private NavMeshAgent _agent;
     private Animator _animator;
-    private Hitbox _hitbox;
     private bool _died;
     private int _dieHash;
     private int _hitHash;
@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour, IDamageable
         AttackTimer = new CountdownTimer(Data.attackRate);
         _attackStrategy = new SphereCastStrategy(attackMask, Data.attackArea);
         Locomotion = new BaseLocomotion(transform);
-        _hitbox = GetComponent<Hitbox>();
+        Hitbox = GetComponent<Hitbox>();
         _animator = GetComponentInChildren<Animator>();
         _agent = GetComponent<NavMeshAgent>();
     }
@@ -51,7 +51,7 @@ public class Enemy : MonoBehaviour, IDamageable
         _agent.stoppingDistance = Data.attackRange - 0.5f;
         _dieHash = Animator.StringToHash("Die");
         _hitHash = Animator.StringToHash("GetHit");
-        _hitbox.SetBodyType(Data.bodyType);
+        Hitbox.SetBodyType(Data.bodyType);
         
         WanderState = new EnemyWanderState(_stateMachine, _animator, _agent, this, _detector);
         ChaseState = new EnemyChaseState(_stateMachine, _animator, _agent, this, _detector);
@@ -94,7 +94,9 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void OnHit()
     {
-        _animator.Play(_hitHash, 0 , 0.1f);
+        _animator.CrossFade(_hitHash, 0.1f);
+        ChaseState.AgroStatus();
+        _stateMachine.SetState(ChaseState);
     }
     
     private void Die()
@@ -110,13 +112,13 @@ public class Enemy : MonoBehaviour, IDamageable
     private void OnEnable()
     {
         _health.Die += Die;
-        _hitbox.OnHit += OnHit;
+        Hitbox.OnHit += OnHit;
     }
 
     private void OnDisable()
     {
         _health.Die -= Die;
-        _hitbox.OnHit -= OnHit;
+        Hitbox.OnHit -= OnHit;
     }
     
     private void OnDrawGizmosSelected()

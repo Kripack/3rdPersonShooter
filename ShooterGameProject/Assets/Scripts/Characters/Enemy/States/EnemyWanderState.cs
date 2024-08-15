@@ -17,7 +17,6 @@ public class EnemyWanderState : EnemyBaseState
         
     public override void OnEnter() 
     {
-        Debug.Log("Wandering around.."); 
         animator.CrossFade(walkHash, crossFadeDuration);
         
         agent.speed = _wanderSpeed;
@@ -44,7 +43,6 @@ public class EnemyWanderState : EnemyBaseState
             if (detector.CanDetectPlayer())
             {
                 stateMachine.SetState(enemy.ChaseState); 
-                Debug.Log("To chasing state");
             }
         }
     }

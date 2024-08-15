@@ -4,6 +4,8 @@ using UnityEngine.AI;
 public class EnemyChaseState : EnemyBaseState
 {
     private readonly float _chaseSpeed;
+    private bool _agred;
+
     public EnemyChaseState(StateMachine stateMachine, Animator animator, NavMeshAgent agent, Enemy enemy, PlayerDetector detector)
         : base(stateMachine, animator, agent, enemy, detector)
     {
@@ -12,16 +14,13 @@ public class EnemyChaseState : EnemyBaseState
 
     public override void OnEnter()
     {
-        animator.CrossFade(runHash, crossFadeDuration);
+        if(!_agred) animator.CrossFade(runHash, crossFadeDuration);
         agent.speed = _chaseSpeed;
     }
 
     public override void Update()
     {
         agent.SetDestination(detector.Player.position);
-        // var targetRotation = agent.nextPosition - detector.Origin.position;
-        // targetRotation.y = 0f;
-        // enemy.Locomotion.Rotate(targetRotation, enemy.Data.rotationSpeed);
         
         detectionTimer.Tick(Time.deltaTime);
         if (!detectionTimer.IsRunning)
@@ -30,16 +29,23 @@ public class EnemyChaseState : EnemyBaseState
             
             if (detector.CanAttackPlayer())
             {
+                _agred = false;
                 stateMachine.SetState(enemy.AttackState);
-                Debug.Log("To attack state");
                 return;
             }
-            
-            if (!detector.CanDetectPlayer())
+
+            if (!_agred)
             {
-                stateMachine.SetState(enemy.WanderState);
-                Debug.Log("To wander state");
+                if (!detector.CanDetectPlayer())
+                {
+                    stateMachine.SetState(enemy.WanderState);
+                }
             }
         }
+    }
+
+    public void AgroStatus()
+    {
+        _agred = true;
     }
 }

@@ -22,8 +22,8 @@ MonoBehaviour:
   attackRate: 4
   attackRange: 2
   attackArea: 0.5
-  viewRadius: 15
-  innerViewRadius: 5
+  viewRadius: 25
+  innerViewRadius: 10
   viewAngle: 70
-  wanderRadius: 30
+  wanderRadius: 50
   detectionCooldown: 0.5
