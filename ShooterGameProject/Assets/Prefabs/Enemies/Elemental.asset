@@ -20,7 +20,7 @@ MonoBehaviour:
   rotationSpeed: 1
   damage: 10
   attackRate: 4
-  attackRange: 1.5
+  attackRange: 2
   attackArea: 0.5
   viewRadius: 20
   innerViewRadius: 10
