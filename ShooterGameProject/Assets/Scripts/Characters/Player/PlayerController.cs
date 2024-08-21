@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Die()
     {
-        Debug.LogWarning("YOU DIED!");
+        return;
     }
 
     private void Update()
@@ -84,17 +84,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             if (_stateMachine.CurrentState != InAirState) { _stateMachine.SetState(InAirState); }
         }
-        // Debug
-        if (Input.GetKey(KeyCode.F))
-        {
-            Debug.Log(_stateMachine.CurrentState.ToString());
-            Motor.Jump();
-        }
     }
 
     private void FixedUpdate()
     {
-        
         Motor.ApplyGravity();
         if (!IsPerformingAction)
         {

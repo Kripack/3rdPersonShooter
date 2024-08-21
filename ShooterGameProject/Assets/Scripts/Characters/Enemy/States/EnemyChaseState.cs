@@ -10,6 +10,7 @@ public class EnemyChaseState : EnemyBaseState
         : base(stateMachine, animator, agent, enemy, detector)
     {
         _chaseSpeed = enemy.Data.ChaseSpeed;
+        enemy.Hitbox.OnHit += AgroStatus;
     }
 
     public override void OnEnter()
@@ -44,7 +45,7 @@ public class EnemyChaseState : EnemyBaseState
         }
     }
 
-    public void AgroStatus()
+    private void AgroStatus()
     {
         _agred = true;
     }

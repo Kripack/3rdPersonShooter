@@ -43,8 +43,7 @@ public class PlayerLocomotion : MonoBehaviour
         var moveDirection = (forwardVel + horizontalVel).normalized;
         moveDirection.y = 0f;
 
-        _rb.MovePosition(_rb.position + moveDirection * (speed * speedMultiplier * Time.deltaTime));
-        //transform.position += moveDirection * (speed * speedMultiplier * Time.deltaTime);
+        _rb.MovePosition(_rb.position + moveDirection * (speed * speedMultiplier * Time.fixedDeltaTime));
     }
     
     public void Rotate(float rotationSpeed)

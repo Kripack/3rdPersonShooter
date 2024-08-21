@@ -14,7 +14,6 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
 
     public Vector2 look;
     public Vector2 moveInput;
-    public Vector2 previusMoveInput;
 
     #region Events
     public event Action Jump;

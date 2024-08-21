@@ -94,9 +94,8 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void OnHit()
     {
-        _animator.CrossFade(_hitHash, 0.1f);
-        ChaseState.AgroStatus();
         _stateMachine.SetState(ChaseState);
+        _animator.CrossFade(_hitHash, 0.1f);
     }
     
     private void Die()

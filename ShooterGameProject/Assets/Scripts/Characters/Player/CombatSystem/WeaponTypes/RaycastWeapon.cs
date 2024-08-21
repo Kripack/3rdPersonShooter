@@ -2,23 +2,10 @@ using UnityEngine;
 
 public class RaycastWeapon : RangedWeapon
 {
-    public override void Attack(float damageMultiplier)
+    public override void Attack()
     {
-        if (combatSystemController.AmmoManager.UseAmmo(rangeData.ammoType))
-        {
-            ReactOnPrimaryAttack();
-            
-            VisualFXManager.instance.PlayParticleSystem(muzzleFlash);
-            SoundFXManager.instance.PlaySoundClip(rangeData.shootingSound, weaponAudioSource);
-            SoundFXManager.instance.PlayRandomSoundClip(rangeData.bulletShellsSound, weaponAudioSource);
-
-            RaycastShoot();
-        }
-        else
-        {
-            SoundFXManager.instance.PlaySoundClip(rangeData.emptyMagazineSound, weaponAudioSource);
-            StartReload();
-        }
+        base.Attack();
+        RaycastShoot();
     }
 
     private void RaycastShoot()
@@ -39,7 +26,6 @@ public class RaycastWeapon : RangedWeapon
             }
         }
     }
-    
 
     private void AcceptAttack(IAttackVisitor attackVisitor, RaycastHit hit)
     {

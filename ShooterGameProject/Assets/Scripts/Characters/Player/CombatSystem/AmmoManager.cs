@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class AmmoManager
 {
+    public event Action OnAmmoChanged;
+    
     private Dictionary<AmmoType, int> _currentAmmo;
     private Dictionary<AmmoType, int> _totalAmmo;
     private Dictionary<AmmoType, int> _magazineSizes;
@@ -13,29 +15,36 @@ public class AmmoManager
         {
             { AmmoType.Pistol9Mm, 9 },
             { AmmoType.Rifle762X39Mm, 30 },
+            { AmmoType.None, 1 },
         };
 
         _totalAmmo = new Dictionary<AmmoType, int>
         {
             { AmmoType.Pistol9Mm, 90 },
             { AmmoType.Rifle762X39Mm, 180 },
+            { AmmoType.None, 1 },
         };
 
         _magazineSizes = new Dictionary<AmmoType, int>
         {
             { AmmoType.Pistol9Mm, 9 },
             { AmmoType.Rifle762X39Mm, 30 },
+            { AmmoType.None, 1 },
         };
     }
 
     public bool UseAmmo(AmmoType ammoType)
     {
+        if (ammoType == AmmoType.None) return true;
+        
         if (_currentAmmo[ammoType] > 0)
         {
             _currentAmmo[ammoType]--;
+            OnAmmoChanged?.Invoke();
             return true;
         }
-        else return false;
+        
+        return false;
     }
 
     public void Reload(AmmoType ammoType)
@@ -51,6 +60,7 @@ public class AmmoManager
             _currentAmmo[ammoType] += _totalAmmo[ammoType];
             _totalAmmo[ammoType] = 0;
         }
+        OnAmmoChanged?.Invoke();
     }
 
     public int GetCurrentAmmo(AmmoType ammoType)
@@ -61,6 +71,11 @@ public class AmmoManager
     public int GetTotalAmmo(AmmoType ammoType)
     {
         return _totalAmmo[ammoType];
+    }
+
+    public int GetMagazineSizes(AmmoType ammoType)
+    {
+        return _magazineSizes[ammoType];
     }
 
     public void AddTotalAmmo(AmmoType ammoType, int count)

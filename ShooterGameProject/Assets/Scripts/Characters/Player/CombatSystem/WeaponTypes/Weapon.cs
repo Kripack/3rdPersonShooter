@@ -29,7 +29,7 @@ public class Weapon : MonoBehaviour
         
         return this;
     }
-    public virtual void Attack(float damageMultiplier)
+    public virtual void Attack()
     {
         return;
     }

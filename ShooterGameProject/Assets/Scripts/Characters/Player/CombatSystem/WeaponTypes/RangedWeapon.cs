@@ -21,6 +21,15 @@ public class RangedWeapon : Weapon
         return this;
     }
 
+    public override void Attack()
+    {
+        ReactOnPrimaryAttack();
+        
+        VisualFXManager.instance.PlayParticleSystem(muzzleFlash); 
+        SoundFXManager.instance.PlaySoundClip(rangeData.shootingSound, weaponAudioSource); 
+        SoundFXManager.instance.PlayRandomSoundClip(rangeData.bulletShellsSound, weaponAudioSource);
+    }
+
     public override void Disable()
     {
         base.Disable();
@@ -35,7 +44,7 @@ public class RangedWeapon : Weapon
         SoundFXManager.instance.PlaySoundClip(rangeData.reloadSound, weaponAudioSource);
         
         characterAnimator.Animator.SetTrigger(characterAnimator.ReloadTrigger);
-        StartCoroutine(WeaponRigDelayOff(rangeData.reloadAnimation.length - 0.5f));
+        StartCoroutine(WeaponRigDelay(rangeData.reloadAnimation.length - 0.5f));
     }
     
     public override void ApplyReload()
@@ -55,15 +64,18 @@ public class RangedWeapon : Weapon
     
     protected Vector3 CalculateSpread()
     {
+        var recoilFactor = rangeData.recoilFactor;
+        if (!combatSystemController.FirstAttackPerformed) recoilFactor = rangeData.recoilFactor / 3f;
+        
         return new Vector3
         {
-            x = Random.Range(-rangeData.recoilFactor, rangeData.recoilFactor),
-            y = Random.Range(-rangeData.recoilFactor, rangeData.recoilFactor),
-            z = Random.Range(-rangeData.recoilFactor, rangeData.recoilFactor)
+            x = Random.Range(-recoilFactor, recoilFactor),
+            y = Random.Range(-recoilFactor, recoilFactor),
+            z = Random.Range(-recoilFactor, recoilFactor)
         };
     }
     
-    private IEnumerator WeaponRigDelayOff(float delay)
+    private IEnumerator WeaponRigDelay(float delay)
     {
         characterAnimator.SetAimRigWeight(0f);
         characterAnimator.SetHoldWeaponRigWeight(0f);

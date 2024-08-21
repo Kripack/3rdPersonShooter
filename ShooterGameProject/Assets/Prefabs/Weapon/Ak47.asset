@@ -16,6 +16,8 @@ MonoBehaviour:
   damage: 10
   range: 500
   fireRate: 10
+  ammoType: 0
+  crosshairFactor: 1.25
   headShotMultiplier: 3
   layerMask:
     serializedVersion: 2
@@ -25,13 +27,10 @@ MonoBehaviour:
   cameraShakeDuration: 0.12
   cameraShakeStrength: 0.04
   easeMode: 31
-  ammoType: 0
-  reloadTime: 1
   useRecoil: 1
   recoilFactor: 0.01
   bodyRecoilFactor: 0.04
   shootingSound: {fileID: 8300000, guid: 8602b7d5cd15c1943a50aa53f171c8cf, type: 3}
-  emptyMagazineSound: {fileID: 0}
   reloadSound: {fileID: 8300000, guid: 3c5c1d4d7b9307c458890a4beb12e4ae, type: 3}
   bulletShellsSound:
   - {fileID: 8300000, guid: 06df58efa12d0b04a8e5bb2fc2dd7ace, type: 3}

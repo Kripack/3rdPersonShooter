@@ -2,26 +2,25 @@ using System;
 public class Health
 {
     public event Action Die;
-    public event Action<float> OnHealthChange;
-    
-    private float _maxHealth;
-    private float _currentHealth;
+    public event Action OnHealthChange;
+    public float CurrentHp { get; private set; }
+    public float MaxHp { get; }
 
     public Health(float maxHealth)
     {
-        _maxHealth = maxHealth;
-        _currentHealth = maxHealth;
+        MaxHp = maxHealth;
+        CurrentHp = maxHealth;
     }
 
     public void TakeDamage(float amount)
     {
-        if (_currentHealth <= 0f) return;
+        if (CurrentHp <= 0f) return;
         
-        _currentHealth -= amount;
+        CurrentHp -= amount;
         
-        OnHealthChange?.Invoke(amount);
+        OnHealthChange?.Invoke();
         
-        if (_currentHealth <= 0)
+        if (CurrentHp <= 0)
         {
             Die?.Invoke();
         }
