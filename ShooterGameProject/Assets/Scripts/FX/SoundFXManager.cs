@@ -12,7 +12,7 @@ public class SoundFXManager : MonoBehaviour
         }
     }
 
-    public void PlaySoundClip(AudioClip clip, Vector3 spawnPosition, float volume = 1f)
+    public void PlayAudioClip(AudioClip clip, Vector3 spawnPosition, float volume = 1f)
     {
         if (clip != null)
         {
@@ -31,7 +31,7 @@ public class SoundFXManager : MonoBehaviour
         }
     }
     
-    public void PlaySoundClip(AudioClip clip, AudioSource audioSource, float volume = 1f)
+    public void PlayAudioClip(AudioClip clip, AudioSource audioSource, float volume = 1f)
     {
         if (clip != null)
         {
@@ -43,7 +43,7 @@ public class SoundFXManager : MonoBehaviour
         }
     }
     
-    public void PlayRandomSoundClip(AudioClip[] clips, AudioSource audioSource, float volume = 1f)
+    public void PlayRandomAudioClip(AudioClip[] clips, AudioSource audioSource, float volume = 1f)
     {
         if (clips != null)
         {

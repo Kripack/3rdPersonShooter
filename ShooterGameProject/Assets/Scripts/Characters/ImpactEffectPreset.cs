@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/WeaponData/ImpactEffectPreset")]
+[CreateAssetMenu(menuName = "ScriptableObjects/Preset/ImpactEffectPreset")]
 public class ImpactEffectPreset : ScriptableObject
 {
     public GameObject environmentImpactEffect;

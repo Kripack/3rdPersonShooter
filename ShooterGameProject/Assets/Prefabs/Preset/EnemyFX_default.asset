@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1fe78e25c3953204c846800c0cb470f7, type: 3}
-  m_Name: DefaultEnemyFX
+  m_Name: EnemyFX_default
   m_EditorClassIdentifier: 
   environmentImpactEffect: {fileID: 100014, guid: a57a6829db3568c4d9bdc37e9e63c017, type: 3}
   fleshBodyEffect: {fileID: 3824937358439885782, guid: 6f09700bbb120b34f93504fc33fd7a3a, type: 3}

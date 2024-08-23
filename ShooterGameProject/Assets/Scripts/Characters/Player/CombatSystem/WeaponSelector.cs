@@ -14,7 +14,7 @@ public class WeaponSelector
     }
     
     private Weapon _activeWeapon;
-    private CombatSystemController _combatSystemController;
+    private readonly CombatSystemController _combatSystemController;
     
     public void DisableWeapon()
     {
@@ -37,9 +37,16 @@ public class WeaponSelector
     public WeaponData SelectNextWeapon(WeaponData[] weaponDataArray)
     {
         _currentWeaponIndex = (_currentWeaponIndex + 1) % weaponDataArray.Length;
-        WeaponData selectedWeapon = weaponDataArray[_currentWeaponIndex];
+        var selectedWeapon = weaponDataArray[_currentWeaponIndex];
         OnWeaponSelected?.Invoke(selectedWeapon);
         return selectedWeapon;
     }
-    
+
+    public WeaponData SelectWeapon(WeaponData[] weaponDataArray ,int index)
+    {
+        _currentWeaponIndex = index % weaponDataArray.Length;
+        var selectedWeapon = weaponDataArray[_currentWeaponIndex];
+        OnWeaponSelected?.Invoke(selectedWeapon);
+        return selectedWeapon;
+    }
 }

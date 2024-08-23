@@ -78,9 +78,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "SelectWeapon",
+                    "name": "SelectWeapon1",
                     "type": "Button",
                     "id": "e275c5b0-22c6-4d08-b8c3-6bf6ac8485ab",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SelectWeapon2",
+                    "type": "Button",
+                    "id": "a45ddae9-0bae-4aa9-bf34-799c988d6454",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -244,8 +253,8 @@
                     "path": "<Keyboard>/1",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "SelectWeapon",
+                    "groups": "Keyboard Mouse",
+                    "action": "SelectWeapon1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -268,6 +277,17 @@
                     "processors": "",
                     "groups": "Keyboard Mouse",
                     "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b765c4bf-2123-465b-b4f2-f915c73b6170",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard Mouse",
+                    "action": "SelectWeapon2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

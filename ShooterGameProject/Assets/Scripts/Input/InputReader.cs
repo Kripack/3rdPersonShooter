@@ -21,7 +21,7 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
     public event Action Aim;
     public event Action ViewChange;
     public event Action FreeLook;
-    public event Action SelectWeapon;
+    public event Action<int> SelectWeapon;
     public event Action Attack;
     public event Action StartAutoAttack;
     public event Action StopAutoAttack;
@@ -115,11 +115,19 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
         }
     }
 
-    public void OnSelectWeapon(InputAction.CallbackContext context)
+    public void OnSelectWeapon1(InputAction.CallbackContext context)
     {
         if (context.phase is InputActionPhase.Performed)
         {
-            SelectWeapon?.Invoke();
+            SelectWeapon?.Invoke(0);
+        }
+    }
+
+    public void OnSelectWeapon2(InputAction.CallbackContext context)
+    {
+        if (context.phase is InputActionPhase.Performed)
+        {
+            SelectWeapon?.Invoke(1);
         }
     }
 

@@ -5,6 +5,7 @@ public class EnemyData : ScriptableObject
 {
     public BodyType bodyType;
     public ImpactEffectPreset impactEffectPreset;
+    public AudioFXPreset audioFXPreset;
     
     public float maxHp;
     public float speed;

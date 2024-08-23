@@ -26,8 +26,8 @@ public class RangedWeapon : Weapon
         ReactOnPrimaryAttack();
         
         VisualFXManager.instance.PlayParticleSystem(muzzleFlash); 
-        SoundFXManager.instance.PlaySoundClip(rangeData.shootingSound, weaponAudioSource); 
-        SoundFXManager.instance.PlayRandomSoundClip(rangeData.bulletShellsSound, weaponAudioSource);
+        SoundFXManager.instance.PlayAudioClip(rangeData.shootingSound, weaponAudioSource); 
+        SoundFXManager.instance.PlayRandomAudioClip(rangeData.bulletShellsSound, weaponAudioSource);
     }
 
     public override void Disable()
@@ -41,7 +41,7 @@ public class RangedWeapon : Weapon
         if (isReloading) return;
         isReloading = true;
 
-        SoundFXManager.instance.PlaySoundClip(rangeData.reloadSound, weaponAudioSource);
+        SoundFXManager.instance.PlayAudioClip(rangeData.reloadSound, weaponAudioSource);
         
         characterAnimator.Animator.SetTrigger(characterAnimator.ReloadTrigger);
         StartCoroutine(WeaponRigDelay(rangeData.reloadAnimation.length - 0.5f));

@@ -1,9 +1,9 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Hitbox))]
+[RequireComponent(typeof(AudioSource))]
 public class Enemy : MonoBehaviour, IDamageable
 {
     [field: SerializeField] public EnemyData Data { get; private set; }
@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private Health _health;
     private NavMeshAgent _agent;
     private Animator _animator;
+    private AudioSource _audioSource;
     private bool _died;
     private int _dieHash;
     private int _hitHash;
@@ -42,6 +43,7 @@ public class Enemy : MonoBehaviour, IDamageable
         Hitbox = GetComponent<Hitbox>();
         _animator = GetComponentInChildren<Animator>();
         _agent = GetComponent<NavMeshAgent>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -77,9 +79,8 @@ public class Enemy : MonoBehaviour, IDamageable
         if (hit.collider.TryGetComponent<IAttackVisitor>(out var attackVisitor) == true)
         {
             AcceptAttack(attackVisitor, hit);
-            Debug.Log(transform.name + " deal " + Data.damage + " to Player!");
+            SoundFXManager.instance.PlayRandomAudioClip(Data.audioFXPreset.attackClips, _audioSource, 0.75f);
         }
-        
     }
 
     private void AcceptAttack(IAttackVisitor attackVisitor, RaycastHit hit)

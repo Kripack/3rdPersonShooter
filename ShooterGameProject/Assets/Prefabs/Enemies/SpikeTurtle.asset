@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bodyType: 0
   impactEffectPreset: {fileID: 11400000, guid: df2669cfa96195440a6fe87d07ce0d16, type: 2}
+  audioFXPreset: {fileID: 11400000, guid: 0b923e808f8c22348b8f53428e447514, type: 2}
   maxHp: 40
   speed: 1
   chaseSpeedFactor: 1.5

@@ -83,6 +83,12 @@ public class CombatSystemController : MonoBehaviour
             {
                 _resetFirstAttackCoroutine = StartCoroutine(ResetFirstAttack());
             }
+            else
+            {
+                StopCoroutine(_resetFirstAttackCoroutine);
+                _resetFirstAttackCoroutine = StartCoroutine(ResetFirstAttack());
+            }
+            
             _autoAttackCoroutine = null;
         }
     }
@@ -114,7 +120,7 @@ public class CombatSystemController : MonoBehaviour
     {
         weaponHolderFollow.localPosition += recoilValue;
     }
-    private void SwitchWeapon()
+    private void SwitchWeapon(int index)
     {
         if (_currentWeapon != null) 
         { 
@@ -123,8 +129,8 @@ public class CombatSystemController : MonoBehaviour
         }
         else
         {
-            WeaponData newWeaponData = WeaponSelector.SelectNextWeapon(weaponDataArray);
-            GameObject newWeaponObject = WeaponSelector.ActivateWeapon(newWeaponData, spawnPos, this);
+            var newWeaponData = WeaponSelector.SelectWeapon(weaponDataArray, index);
+            var newWeaponObject = WeaponSelector.ActivateWeapon(newWeaponData, spawnPos, this);
             _currentWeapon = newWeaponObject.GetComponent<Weapon>();
         }
     }

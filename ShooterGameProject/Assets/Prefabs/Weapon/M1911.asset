@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: M1911
   m_EditorClassIdentifier: 
   weaponName: M1911
+  icon: {fileID: 21300000, guid: 232b9365b0cc9964ca08ef18efd135aa, type: 3}
   damage: 5
   range: 500
   fireRate: 3

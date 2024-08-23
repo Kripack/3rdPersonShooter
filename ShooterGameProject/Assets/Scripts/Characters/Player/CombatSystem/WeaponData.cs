@@ -4,8 +4,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObjects/WeaponData/Default")]
 public class WeaponData : ScriptableObject
 {
-    [Header("Parameters")]
+    
     public string weaponName;
+    public Sprite icon;
+    [Header("Parameters")]
     public float damage;
     public float range;
     public float fireRate;
