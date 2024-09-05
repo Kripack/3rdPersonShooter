@@ -27,7 +27,18 @@ public class PlayerDetector
         var directionToPlayer = Player.position - Origin.position;
         return directionToPlayer.magnitude <= _attackRange;
     }
+    public bool DoesDirectionMatch(float angleThreshold = 1f)
+    {
+        var directionToPlayer = (Player.position - Origin.position).normalized;
+        var angle = Vector3.Angle(Origin.forward, directionToPlayer);
         
-    public void SetDetectionStrategy(IDetectionStrategy detectionStrategy) => _detectionStrategy = detectionStrategy;
+        if (angle <= angleThreshold)
+        {
+            return true;
+        }
+
+        return false;
+    }    
     
+    public void SetDetectionStrategy(IDetectionStrategy detectionStrategy) => _detectionStrategy = detectionStrategy;
 }

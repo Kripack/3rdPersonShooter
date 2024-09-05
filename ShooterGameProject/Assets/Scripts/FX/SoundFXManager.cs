@@ -25,10 +25,6 @@ public class SoundFXManager : MonoBehaviour
             float clipLength = audioSource.clip.length;
             Destroy(audioSource.gameObject, clipLength);
         }
-        else
-        {
-            Debug.LogWarning("Attempted to play a sound clip that is not set.");
-        }
     }
     
     public void PlayAudioClip(AudioClip clip, AudioSource audioSource, float volume = 1f)
@@ -36,10 +32,6 @@ public class SoundFXManager : MonoBehaviour
         if (clip != null)
         {
             audioSource.PlayOneShot(clip, volume);
-        }
-        else
-        {
-            Debug.LogWarning("Attempted to play a sound clip that is not set.");
         }
     }
     
@@ -49,10 +41,6 @@ public class SoundFXManager : MonoBehaviour
         {
             int randomIndex = Random.Range(0, clips.Length);
             audioSource.PlayOneShot(clips[randomIndex], volume);
-        }
-        else
-        {
-            Debug.LogWarning("Attempted to play a sound clip that is not set.");
         }
     }
 }

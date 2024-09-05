@@ -32,6 +32,7 @@ public class CharacterAnimator : MonoBehaviour
     public int AimingBool { get; private set; }
     public int LandingTrigger { get; private set; }
     public int ReloadTrigger { get; private set; }
+    public int DeathTrigger { get; private set; }
     private int _vertical;
     private int _horizontal;
 
@@ -100,6 +101,7 @@ public class CharacterAnimator : MonoBehaviour
         AimingBool = Animator.StringToHash("GunAiming");
         LandingTrigger = Animator.StringToHash("Landing");
         ReloadTrigger = Animator.StringToHash("Reload");
+        DeathTrigger = Animator.StringToHash("Death");
         
         JumpAnimation = Animator.StringToHash("Jump_Up");
         JumpLegsOnlyAnimation = Animator.StringToHash("Jump_Up_LegsOnly");

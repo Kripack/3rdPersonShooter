@@ -18,10 +18,6 @@ public class VisualFXManager : MonoBehaviour
         {
             particle.Play();
         }
-        else
-        {
-            Debug.LogWarning("Attempted to play a particle system that is not set.");
-        }
     }
     public void PlayParticleSystem(ParticleSystem particleObject, Vector3 spawnPosition, Quaternion rotation)
     {
@@ -31,10 +27,6 @@ public class VisualFXManager : MonoBehaviour
             particleObject.Play();
             
             Destroy(particleObject.gameObject, particleObject.totalTime);
-        }
-        else
-        {
-            Debug.LogWarning("Attempted to play a particle system that is not set.");
         }
     }
     

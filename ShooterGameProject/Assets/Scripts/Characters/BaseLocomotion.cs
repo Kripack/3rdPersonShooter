@@ -34,7 +34,7 @@ public class BaseLocomotion
         _origin.rotation = Quaternion.Slerp(
             _origin.rotation,
             targetRotation,
-            rotationSpeed + Time.fixedDeltaTime);
+            rotationSpeed + Time.deltaTime);
     }
     
     public void Move(Vector3 velocity)

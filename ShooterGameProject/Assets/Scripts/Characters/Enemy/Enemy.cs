@@ -10,27 +10,29 @@ public class Enemy : MonoBehaviour, IDamageable
     [SerializeField] private LayerMask attackMask;
     public CountdownTimer AttackTimer { get; private set; }
     public BaseLocomotion Locomotion { get; private set; }
-    public Hitbox Hitbox { get; private set; }
+    public NavMeshAgent Agent { get; private set; }
+    public bool IsDead { get; set; }
     
     #region State Machine
 
-    public EnemyWanderState WanderState { get; private set; }
-    public EnemyChaseState ChaseState { get; private set; }
-    public EnemyAttackState AttackState { get; private set; }
+    public WanderState WanderState { get; private set; }
+    public ChaseState ChaseState { get; private set; }
+    public AttackState AttackState { get; private set; }
     
     private StateMachine _stateMachine;
 
     #endregion
     
+    private Hitbox _hitbox;
+    private HeadHitbox _headHitbox;
     private PlayerDetector _detector;
     private IAttackStrategy _attackStrategy;
     private Health _health;
-    private NavMeshAgent _agent;
     private Animator _animator;
     private AudioSource _audioSource;
-    private bool _died;
     private int _dieHash;
     private int _hitHash;
+    private Collider _ownCollider;
 
     private void Awake()
     {
@@ -40,36 +42,38 @@ public class Enemy : MonoBehaviour, IDamageable
         AttackTimer = new CountdownTimer(Data.attackRate);
         _attackStrategy = new SphereCastStrategy(attackMask, Data.attackArea);
         Locomotion = new BaseLocomotion(transform);
-        Hitbox = GetComponent<Hitbox>();
+        _hitbox = GetComponent<Hitbox>();
+        _headHitbox = GetComponentInChildren<HeadHitbox>();
         _animator = GetComponentInChildren<Animator>();
-        _agent = GetComponent<NavMeshAgent>();
+        Agent = GetComponent<NavMeshAgent>();
         _audioSource = GetComponent<AudioSource>();
+        _ownCollider = GetComponent<Collider>();
     }
 
     private void Start()
     {
-        _agent.updatePosition = false;
-        _agent.speed = Data.speed;
-        _agent.stoppingDistance = Data.attackRange - 0.5f;
+        Agent.updatePosition = false;
+        Agent.speed = Data.speed;
+        Agent.stoppingDistance = Data.attackRange - 0.5f;
         _dieHash = Animator.StringToHash("Die");
         _hitHash = Animator.StringToHash("GetHit");
-        Hitbox.SetBodyType(Data.bodyType);
+        _hitbox.SetBodyType(Data.bodyType);
         
-        WanderState = new EnemyWanderState(_stateMachine, _animator, _agent, this, _detector);
-        ChaseState = new EnemyChaseState(_stateMachine, _animator, _agent, this, _detector);
-        AttackState = new EnemyAttackState(_stateMachine, _animator, _agent, this, _detector);
+        WanderState = new WanderState(_stateMachine, _animator, Agent, this, _detector);
+        ChaseState = new ChaseState(_stateMachine, _animator, Agent, this, _detector);
+        AttackState = new AttackState(_stateMachine, _animator, Agent, this, _detector);
         _stateMachine.SetState(WanderState);
     }
 
     private void Update()
     {
         AttackTimer.Tick(Time.deltaTime);
-        if(!_died) _stateMachine.Update();
+        if(!IsDead) _stateMachine.Update();
     }
 
     private void FixedUpdate()
     {
-        Locomotion.MoveTo(_agent.nextPosition);
+        Locomotion.MoveTo(Agent.nextPosition);
     }
 
     public void Attack()
@@ -95,30 +99,34 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void OnHit()
     {
-        _stateMachine.SetState(ChaseState);
+        Agent.speed /= 3f;
+        ChaseState.AgroStatus();
+        if (_stateMachine.CurrentState != ChaseState)  _stateMachine.SetState(ChaseState);
         _animator.CrossFade(_hitHash, 0.1f);
     }
     
     private void Die()
     {
-        _animator.Play(_dieHash, 0 , 0.1f);
-
-        _agent.baseOffset = 0f;
-        GetComponent<Collider>().enabled = false; // ?
-        _died = true;
-        _agent.isStopped = true;
+        Agent.baseOffset = 0f;
+        _ownCollider.enabled = false;
+        IsDead = true;
+        Agent.isStopped = true;
+        
+        _animator.CrossFade(_dieHash, 0.1f);
     }
 
     private void OnEnable()
     {
         _health.Die += Die;
-        Hitbox.OnHit += OnHit;
+        _hitbox.OnHit += OnHit;
+        if (_headHitbox != null) _headHitbox.OnHit += OnHit;
     }
 
     private void OnDisable()
     {
         _health.Die -= Die;
-        Hitbox.OnHit -= OnHit;
+        _hitbox.OnHit -= OnHit;
+        if (_headHitbox != null) _headHitbox.OnHit -= OnHit;
     }
     
     private void OnDrawGizmosSelected()

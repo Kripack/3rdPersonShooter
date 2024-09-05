@@ -11,8 +11,8 @@ public class WeaponBar : MonoBehaviour
 
     private void Awake()
     {
-        _text = GetComponent<TextMeshProUGUI>();
-        _icon = GetComponentInChildren<Image>();
+        _text = transform.GetComponent<TextMeshProUGUI>();
+        _icon = transform.GetComponentInChildren<Image>();
     }
 
     private void Start()

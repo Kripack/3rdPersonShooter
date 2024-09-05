@@ -6,6 +6,7 @@ public class HeadHitbox : Hitbox
      
      public override void Visit(RaycastWeapon weapon, RaycastHit hit)
      {
+          if (damageable.IsDead) return;
           DefaultVisit(weapon.Data.damage, weapon.Data.headShotMultiplier);
           VisualFXManager.instance.SpawnImpactEffect(weapon.Data.impactEffectPreset.headShotEffect, hit);
           

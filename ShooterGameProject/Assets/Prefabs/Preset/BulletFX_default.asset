@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   environmentImpactEffect: {fileID: 100002, guid: ba261927bb2ae4244b20b0eb77a96415, type: 3}
   fleshBodyEffect: {fileID: 3824937358439885782, guid: 5d6c8ee7a7c479749abea1ce7f9d09e8, type: 3}
-  solidBodyEffect: {fileID: 0}
+  solidBodyEffect: {fileID: 100002, guid: f04e15e9b0b32f24b9e87868e8bfbeea, type: 3}
   headShotEffect: {fileID: 100010, guid: d609d5ebc845aca409f72e9c6a56dc60, type: 3}

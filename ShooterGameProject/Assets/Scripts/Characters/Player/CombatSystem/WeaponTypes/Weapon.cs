@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class Weapon : MonoBehaviour
 {
-    public WeaponData Data { get; private set; }
+    public WeaponData Data { get; protected set; }
     
     [SerializeField] private Transform leftHandIKTarget;
     [SerializeField] private Transform leftHandHint;

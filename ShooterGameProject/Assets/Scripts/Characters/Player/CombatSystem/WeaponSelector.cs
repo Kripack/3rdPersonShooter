@@ -6,47 +6,56 @@ public class WeaponSelector
 {
     public event Action<WeaponData> OnWeaponSelected;
     public event Action OnWeaponDisabled; 
-    private int _currentWeaponIndex = -1;
+    public int CurrentWeaponIndex { get; set; }
+
+    private WeaponData[] _weaponDataArray;
+    private readonly CombatSystemController _combatSystemController;
+    private readonly Transform _spawnPos;
     
-    public WeaponSelector(CombatSystemController combatSystemController)
+    public WeaponSelector(CombatSystemController combatSystemController, Transform spawnPos, WeaponData[] weaponDataArray)
     {
         _combatSystemController = combatSystemController;
+        _spawnPos = spawnPos;
+        _weaponDataArray = weaponDataArray;
+        CurrentWeaponIndex = -1;
     }
     
-    private Weapon _activeWeapon;
-    private readonly CombatSystemController _combatSystemController;
-    
-    public void DisableWeapon()
+    public void DisableWeapon(Weapon currentWeapon)
     {
         _combatSystemController.SetEquipStatus(false);
         OnWeaponDisabled?.Invoke();
         
-        _activeWeapon.Disable();
-        Object.Destroy(_activeWeapon.gameObject);
+        currentWeapon.Disable();
+        Object.Destroy(currentWeapon.gameObject);
     }
     
-    public GameObject ActivateWeapon(WeaponData data, Transform spawnPos, CombatSystemController combatSystemController)
+    private Weapon ActivateWeapon(WeaponData data)
     {
-        var newWeaponObject = Object.Instantiate(data.prefab, spawnPos);
-        _activeWeapon = newWeaponObject.GetComponent<Weapon>().Initialize(data, combatSystemController);
+        var newWeaponObject = Object.Instantiate(data.prefab, _spawnPos);
+        var newWeapon = newWeaponObject.GetComponent<Weapon>().Initialize(data, _combatSystemController);
         
-        combatSystemController.SetEquipStatus(true);
-        return newWeaponObject;
+        _combatSystemController.SetEquipStatus(true);
+        return newWeapon;
     }
     
-    public WeaponData SelectNextWeapon(WeaponData[] weaponDataArray)
+    public Weapon SelectWeapon(int index)
     {
-        _currentWeaponIndex = (_currentWeaponIndex + 1) % weaponDataArray.Length;
-        var selectedWeapon = weaponDataArray[_currentWeaponIndex];
+        CurrentWeaponIndex = index % _weaponDataArray.Length;
+        var selectedWeapon = _weaponDataArray[CurrentWeaponIndex];
+        
         OnWeaponSelected?.Invoke(selectedWeapon);
-        return selectedWeapon;
+        return ActivateWeapon(selectedWeapon);
     }
-
-    public WeaponData SelectWeapon(WeaponData[] weaponDataArray ,int index)
+    
+    public Weapon SelectNextWeapon()
     {
-        _currentWeaponIndex = index % weaponDataArray.Length;
-        var selectedWeapon = weaponDataArray[_currentWeaponIndex];
-        OnWeaponSelected?.Invoke(selectedWeapon);
-        return selectedWeapon;
+        var newWeaponIndex = CurrentWeaponIndex + 1;
+        return SelectWeapon(newWeaponIndex);
+    }
+    
+    public Weapon SelectPreviousWeapon()
+    {
+        var newWeaponIndex = CurrentWeaponIndex - 1;
+        return SelectWeapon(newWeaponIndex);
     }
 }

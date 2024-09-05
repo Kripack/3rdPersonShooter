@@ -6,7 +6,7 @@ public class Hitbox : MonoBehaviour, IAttackVisitor
     public event Action OnHit;
 
     private BodyType _bodyType;
-    private IDamageable _damageable;
+    protected IDamageable damageable;
 
     public void SetBodyType(BodyType type)
     {
@@ -15,11 +15,12 @@ public class Hitbox : MonoBehaviour, IAttackVisitor
     
     private void Start()
     {
-        _damageable = GetDamageable();
+        damageable = GetDamageable();
     }
 
     public virtual void Visit(Enemy enemy, RaycastHit hit)
     {
+        if (damageable.IsDead) return;
         DefaultVisit(enemy.Data.damage);
         
         var impactRotation = Quaternion.LookRotation(hit.normal);
@@ -33,6 +34,7 @@ public class Hitbox : MonoBehaviour, IAttackVisitor
     
     public virtual void Visit(RaycastWeapon weapon, RaycastHit hit)
     {
+        if (damageable.IsDead) return;
         DefaultVisit(weapon.Data.damage);
         
         var impactRotation = Quaternion.LookRotation(hit.normal);
@@ -44,7 +46,7 @@ public class Hitbox : MonoBehaviour, IAttackVisitor
         OnHit?.Invoke();
         
         var totalDamage = damage * damageMultiplier;
-        _damageable?.TakeDamage(totalDamage);
+        damageable?.TakeDamage(totalDamage);
     }
     
     protected virtual IDamageable GetDamageable()
@@ -63,7 +65,5 @@ public class Hitbox : MonoBehaviour, IAttackVisitor
                 VisualFXManager.instance.SpawnImpactEffect(preset.solidBodyEffect, position, rotation);
                 break;
         }
-        
-        
     }
 }

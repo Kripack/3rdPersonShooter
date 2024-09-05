@@ -22,6 +22,8 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
     public event Action ViewChange;
     public event Action FreeLook;
     public event Action<int> SelectWeapon;
+    public event Action SelectNext;
+    public event Action SelectPrevious;
     public event Action Attack;
     public event Action StartAutoAttack;
     public event Action StopAutoAttack;
@@ -150,5 +152,12 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInp
         {
             Reload?.Invoke();
         }
+    }
+
+    public void OnNextWeapon(InputAction.CallbackContext context)
+    {
+        var index = context.ReadValue<float>();
+        if (index > 0) SelectNext?.Invoke();
+        else if (index < 0) SelectPrevious?.Invoke();
     }
 }

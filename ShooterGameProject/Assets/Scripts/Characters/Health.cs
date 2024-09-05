@@ -14,13 +14,12 @@ public class Health
 
     public void TakeDamage(float amount)
     {
-        if (CurrentHp <= 0f) return;
-        
-        CurrentHp -= amount;
+        if (amount > CurrentHp) CurrentHp = 0f;
+        else CurrentHp -= amount;
         
         OnHealthChange?.Invoke();
         
-        if (CurrentHp <= 0)
+        if (CurrentHp <= 0f)
         {
             Die?.Invoke();
         }

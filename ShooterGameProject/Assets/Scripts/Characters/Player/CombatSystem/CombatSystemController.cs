@@ -7,6 +7,7 @@ public class CombatSystemController : MonoBehaviour
     public event Action<WeaponData> OnAttack;
     public InputReader input;
     public WeaponData[] weaponDataArray;
+    
     public AmmoManager AmmoManager { get; private set; }
     public CharacterAnimator CharacterAnimator {  get; private set; }
     public Transform spawnPos;
@@ -16,7 +17,7 @@ public class CombatSystemController : MonoBehaviour
     
     [SerializeField] private Transform weaponHolderFollow;
     
-    private Weapon _currentWeapon;
+    private Weapon _activeWeapon;
     private PlayerController _playerController;
     private Coroutine _autoAttackCoroutine;
     private Coroutine _resetFirstAttackCoroutine;
@@ -24,7 +25,7 @@ public class CombatSystemController : MonoBehaviour
 
     private void Awake()
     {
-        WeaponSelector = new WeaponSelector(this);
+        WeaponSelector = new WeaponSelector(this, spawnPos, weaponDataArray);
         AmmoManager = new AmmoManager();
         CharacterAnimator = GetComponent<CharacterAnimator>();
         _playerController = GetComponent<PlayerController>();
@@ -38,16 +39,28 @@ public class CombatSystemController : MonoBehaviour
         input.Reload += StartReload;
         input.StartAutoAttack += OnStartAutoAttack;
         input.StopAutoAttack += OnStopAutoAttack;
+        input.SelectNext += SelectNextWeapon;
+        input.SelectPrevious += SelectPreviousWeapon;
+    }
+
+    private void OnDisable()
+    {
+        input.SelectWeapon -= SwitchWeapon;
+        input.Reload -= StartReload;
+        input.StartAutoAttack -= OnStartAutoAttack;
+        input.StopAutoAttack -= OnStopAutoAttack;
+        input.SelectNext -= SelectNextWeapon;
+        input.SelectPrevious -= SelectPreviousWeapon;
     }
 
     private void Attack()
     {
         if (_playerController.IsPerformingAction) return;
         
-        if (AmmoManager.UseAmmo(_currentWeapon.Data.ammoType))
+        if (AmmoManager.UseAmmo(_activeWeapon.Data.ammoType))
         {
-            _currentWeapon.Attack();
-            OnAttack?.Invoke(_currentWeapon.Data);
+            _activeWeapon.Attack();
+            OnAttack?.Invoke(_activeWeapon.Data);
         }
         else StartReload();
     }
@@ -57,7 +70,7 @@ public class CombatSystemController : MonoBehaviour
         {
             if (Time.time >= _nextTimeToFire)
             {
-                _nextTimeToFire = Time.time + 1f / _currentWeapon.Data.fireRate;
+                _nextTimeToFire = Time.time + 1f / _activeWeapon.Data.fireRate;
                 Attack();
                 FirstAttackPerformed = true;
             }
@@ -66,7 +79,7 @@ public class CombatSystemController : MonoBehaviour
     }
     private void OnStartAutoAttack()
     {
-        if (!WeaponEquiped) return;
+        if (!WeaponEquiped || _playerController.IsDead) return;
         if (_autoAttackCoroutine == null)
         {
             _autoAttackCoroutine = StartCoroutine(AutoAttackCoroutine());
@@ -104,7 +117,7 @@ public class CombatSystemController : MonoBehaviour
     {
         if (WeaponEquiped)
         {
-            _currentWeapon.StartReload();
+            _activeWeapon.StartReload();
         }
     }
     
@@ -112,7 +125,7 @@ public class CombatSystemController : MonoBehaviour
     {
         if (WeaponEquiped)
         {
-            _currentWeapon.ApplyReload();
+            _activeWeapon.ApplyReload();
         }
     }
 
@@ -122,17 +135,53 @@ public class CombatSystemController : MonoBehaviour
     }
     private void SwitchWeapon(int index)
     {
-        if (_currentWeapon != null) 
-        { 
-            WeaponSelector.DisableWeapon();
-            _currentWeapon = null;
+        if (WeaponEquiped) 
+        {
+            if (WeaponSelector.CurrentWeaponIndex == index)
+            {
+                WeaponSelector.DisableWeapon(_activeWeapon);
+            }
+            else
+            {
+                WeaponSelector.DisableWeapon(_activeWeapon);
+                _activeWeapon = WeaponSelector.SelectWeapon(index);
+            }
         }
         else
         {
-            var newWeaponData = WeaponSelector.SelectWeapon(weaponDataArray, index);
-            var newWeaponObject = WeaponSelector.ActivateWeapon(newWeaponData, spawnPos, this);
-            _currentWeapon = newWeaponObject.GetComponent<Weapon>();
+            _activeWeapon = WeaponSelector.SelectWeapon(index);
         }
+    }
+    
+    private void SelectPreviousWeapon()
+    {
+        if (WeaponEquiped) WeaponSelector.DisableWeapon(_activeWeapon);
+        
+        if (WeaponSelector.CurrentWeaponIndex == 0)
+        {
+            WeaponSelector.CurrentWeaponIndex = -1;
+            return;
+        }
+
+        if (WeaponSelector.CurrentWeaponIndex == -1)
+        {
+            WeaponSelector.CurrentWeaponIndex = weaponDataArray.Length;
+        }
+        
+        _activeWeapon = WeaponSelector.SelectPreviousWeapon();
+    }
+
+    private void SelectNextWeapon()
+    {
+        if (WeaponEquiped) WeaponSelector.DisableWeapon(_activeWeapon);
+        
+        if (WeaponSelector.CurrentWeaponIndex == weaponDataArray.Length - 1)
+        {
+            WeaponSelector.CurrentWeaponIndex = -1;
+            return;
+        }
+        
+        _activeWeapon = WeaponSelector.SelectNextWeapon();
     }
     
     public void SetEquipStatus(bool status)
