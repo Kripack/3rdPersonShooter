@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 public class AttackState : EnemyBaseState
 {
-    public AttackState(StateMachine stateMachine, Animator animator, NavMeshAgent agent, Enemy enemy, PlayerDetector detector)
+    public AttackState(EnemyStateMachine stateMachine, Animator animator, NavMeshAgent agent, Enemy enemy, PlayerDetector detector)
         : base(stateMachine, animator, agent, enemy, detector)
     {
     }
@@ -37,7 +37,7 @@ public class AttackState : EnemyBaseState
 
             if (!detector.CanAttackPlayer())
             {
-                stateMachine.SetState(enemy.ChaseState); 
+                stateMachine.SetState(stateMachine.ChaseState); 
             }
         }
     }

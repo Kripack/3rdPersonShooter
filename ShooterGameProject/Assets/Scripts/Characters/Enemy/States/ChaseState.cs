@@ -7,7 +7,7 @@ public class ChaseState : EnemyBaseState
     private bool _agred;
     private bool _turned;
 
-    public ChaseState(StateMachine stateMachine, Animator animator, NavMeshAgent agent, Enemy enemy, PlayerDetector detector)
+    public ChaseState(EnemyStateMachine stateMachine, Animator animator, NavMeshAgent agent, Enemy enemy, PlayerDetector detector)
         : base(stateMachine, animator, agent, enemy, detector)
     {
         _chaseSpeed = enemy.Data.ChaseSpeed;
@@ -48,7 +48,7 @@ public class ChaseState : EnemyBaseState
             if (detector.CanAttackPlayer())
             {
                 _agred = false;
-                stateMachine.SetState(enemy.AttackState);
+                stateMachine.SetState(stateMachine.AttackState);
                 return;
             }
 
@@ -56,7 +56,7 @@ public class ChaseState : EnemyBaseState
             {
                 if (!detector.CanDetectPlayer())
                 {
-                    stateMachine.SetState(enemy.WanderState);
+                    stateMachine.SetState(stateMachine.WanderState);
                 }
             }
         }

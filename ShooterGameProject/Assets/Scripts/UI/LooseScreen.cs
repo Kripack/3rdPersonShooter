@@ -3,12 +3,17 @@ using UnityEngine.SceneManagement;
 public class LooseScreen : MonoBehaviour
 {
     [SerializeField] private PlayerController player;
-    [SerializeField] private GameObject looseScreen;
+    [SerializeField] private GameObject holder;
     [SerializeField] private float delay = 4f;
 
-    private void Start()
+    private void OnEnable()
     {
         player.Health.Die += InvokeUI;
+    }
+    
+    private void OnDisable()
+    {
+        player.Health.Die -= InvokeUI;
     }
     
     public void RestartScene()
@@ -24,6 +29,6 @@ public class LooseScreen : MonoBehaviour
     private void ShowUI()
     {
         Cursor.lockState = CursorLockMode.None;
-        looseScreen.SetActive(true);
+        holder.SetActive(true);
     }
 }

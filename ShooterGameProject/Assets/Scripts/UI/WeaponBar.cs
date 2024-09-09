@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,10 +14,16 @@ public class WeaponBar : MonoBehaviour
         _icon = transform.GetComponentInChildren<Image>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
         combatSystemController.WeaponSelector.OnWeaponSelected += UpdateUI;
         combatSystemController.WeaponSelector.OnWeaponDisabled += ClearUI;
+    }
+    
+    private void OnDisable()
+    {
+        combatSystemController.WeaponSelector.OnWeaponSelected -= UpdateUI;
+        combatSystemController.WeaponSelector.OnWeaponDisabled -= ClearUI;
     }
     
     private void UpdateUI(WeaponData data)

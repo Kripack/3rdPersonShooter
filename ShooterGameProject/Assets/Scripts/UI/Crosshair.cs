@@ -19,7 +19,6 @@ public class Crosshair : MonoBehaviour
     private void Start()
     {
         _input = combatSystemController.input;
-        combatSystemController.OnAttack += ReactOnAttack;
         
         _startScale = transform.localScale;
         _targetScale = _startScale;
@@ -47,5 +46,15 @@ public class Crosshair : MonoBehaviour
     {
         transform.DOScale(_startScale * (baseAttackFactor * data.crosshairFactor * _currentMoveFactor), 0.1f)
             .SetEase(Ease.Flash);
+    }
+
+    private void OnEnable()
+    {
+        combatSystemController.OnAttack += ReactOnAttack;
+    }
+
+    private void OnDisable()
+    {
+        combatSystemController.OnAttack -= ReactOnAttack;
     }
 }

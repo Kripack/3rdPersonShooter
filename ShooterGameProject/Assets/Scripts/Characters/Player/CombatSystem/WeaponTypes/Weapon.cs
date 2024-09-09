@@ -55,7 +55,7 @@ public class Weapon : MonoBehaviour
     
     protected virtual void ReactOnPrimaryAttack()
     {
-        CameraService.instance.ShakeCamera(Data.cameraShakeDuration, Data.cameraShakeStrength, Data.easeMode);
+        CameraService.instance.ShakeCamera(Data.cameraShakePreset);
     }
     
 }

@@ -12,11 +12,18 @@ public class AmmoBar : MonoBehaviour
         _text = GetComponent<TextMeshProUGUI>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
         combatSystemController.AmmoManager.OnAmmoChanged += UpdateUI;
         combatSystemController.WeaponSelector.OnWeaponSelected += ChangeWeapon;
         combatSystemController.WeaponSelector.OnWeaponDisabled += ClearUI;
+    }
+    
+    private void OnDisable()
+    {
+        combatSystemController.AmmoManager.OnAmmoChanged -= UpdateUI;
+        combatSystemController.WeaponSelector.OnWeaponSelected -= ChangeWeapon;
+        combatSystemController.WeaponSelector.OnWeaponDisabled -= ClearUI;
     }
 
     private void ChangeWeapon(WeaponData newWeapon)

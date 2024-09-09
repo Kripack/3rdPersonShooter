@@ -16,7 +16,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 232b9365b0cc9964ca08ef18efd135aa, type: 3}
   damage: 10
   range: 500
-  fireRate: 3
+  fireRate: 2.5
   ammoType: 1
   crosshairFactor: 1.2
   headShotMultiplier: 4
@@ -25,9 +25,7 @@ MonoBehaviour:
     m_Bits: 136
   prefab: {fileID: 7782937078417749440, guid: ac288be8a8c560e4585184a2e72738d9, type: 3}
   impactEffectPreset: {fileID: 11400000, guid: 5671092fe322619458545675e4f78573, type: 2}
-  cameraShakeDuration: 0.12
-  cameraShakeStrength: 0.04
-  easeMode: 31
+  cameraShakePreset: {fileID: 11400000, guid: 8871317b0b636934cb1f3d4d011103dc, type: 2}
   useRecoil: 1
   recoilFactor: 0.005
   bodyRecoilFactor: 0.03

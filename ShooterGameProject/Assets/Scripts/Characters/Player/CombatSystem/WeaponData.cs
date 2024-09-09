@@ -17,10 +17,6 @@ public class WeaponData : ScriptableObject
     public LayerMask layerMask;
     public GameObject prefab;
     public ImpactEffectPreset impactEffectPreset;
-    
-    [Header("Camera Shake Setting")]
-    public float cameraShakeDuration;
-    public float cameraShakeStrength;
-    public Ease easeMode;
+    public CameraShakePreset cameraShakePreset;
 
 }

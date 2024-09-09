@@ -8,7 +8,7 @@ public class CharacterAnimator : MonoBehaviour
     [field: SerializeField] public Rig HoldWeaponRig { get; private set; }
     [field: SerializeField] public float SpineAimWeight { get; private set; }
     [field: SerializeField] public float SpineAimSprintWeight { get; private set; }
-    public RigBuilder RigBuilder{ get; private set; }
+    public RigBuilder RigBuilder { get; private set; }
     
     [SerializeField] public MultiAimConstraint spineAimConstrain;
     [SerializeField] private TransformFollow leftHandTarget;

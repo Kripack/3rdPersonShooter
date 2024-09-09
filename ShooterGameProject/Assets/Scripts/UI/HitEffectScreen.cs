@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class HitEffectScreen : MonoBehaviour
 {
-    [SerializeField] private PlayerController player;
+    [Inject] private PlayerController _player;
     [SerializeField] private float delayTime = 0.5f;
     [SerializeField] private float fadeOutDuration = 0.5f;
     
@@ -16,9 +17,14 @@ public class HitEffectScreen : MonoBehaviour
         _hitImage = transform.GetComponent<Image>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        player.Health.OnHealthChange += OnHit;
+        _player.Health.OnHealthDecrease += OnHit;
+    }
+    
+    private void OnDisable()
+    {
+        _player.Health.OnHealthDecrease -= OnHit;
     }
 
     private void OnHit()

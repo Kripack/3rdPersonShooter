@@ -14,11 +14,22 @@ public class HealthBar : MonoBehaviour
     private void Start()
     {
         _text.text = player.Health.CurrentHp + "/" + player.Health.MaxHp;
-        player.Health.OnHealthChange += UpdateUI;
     }
 
     private void UpdateUI()
     {
         _text.text = player.Health.CurrentHp + "/" + player.Health.MaxHp;
+    }
+
+    private void OnEnable()
+    {
+        player.Health.OnHealthDecrease += UpdateUI;
+        player.Health.OnHealthIncrease += UpdateUI;
+    }
+    
+    private void OnDisable()
+    {
+        player.Health.OnHealthDecrease -= UpdateUI;
+        player.Health.OnHealthIncrease -= UpdateUI;
     }
 }

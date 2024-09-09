@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using Zenject;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Hitbox))]
@@ -13,16 +14,9 @@ public class Enemy : MonoBehaviour, IDamageable
     public NavMeshAgent Agent { get; private set; }
     public bool IsDead { get; set; }
     
-    #region State Machine
-
-    public WanderState WanderState { get; private set; }
-    public ChaseState ChaseState { get; private set; }
-    public AttackState AttackState { get; private set; }
-    
-    private StateMachine _stateMachine;
-
-    #endregion
-    
+    [Inject] private EnemyList _enemyList;
+    [Inject] private PlayerController _player;
+    private EnemyStateMachine _stateMachine;
     private Hitbox _hitbox;
     private HeadHitbox _headHitbox;
     private PlayerDetector _detector;
@@ -36,9 +30,9 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void Awake()
     {
-        _stateMachine = new StateMachine();
+        _stateMachine = new EnemyStateMachine();
         _health = new Health(Data.maxHp);
-        _detector = new PlayerDetector(GameObject.FindGameObjectWithTag("Player").transform, transform, Data);
+        _detector = new PlayerDetector(_player.transform, transform, Data);
         AttackTimer = new CountdownTimer(Data.attackRate);
         _attackStrategy = new SphereCastStrategy(attackMask, Data.attackArea);
         Locomotion = new BaseLocomotion(transform);
@@ -48,6 +42,7 @@ public class Enemy : MonoBehaviour, IDamageable
         Agent = GetComponent<NavMeshAgent>();
         _audioSource = GetComponent<AudioSource>();
         _ownCollider = GetComponent<Collider>();
+        _stateMachine.InitStates(this, _animator, Agent, _detector);
     }
 
     private void Start()
@@ -59,10 +54,9 @@ public class Enemy : MonoBehaviour, IDamageable
         _hitHash = Animator.StringToHash("GetHit");
         _hitbox.SetBodyType(Data.bodyType);
         
-        WanderState = new WanderState(_stateMachine, _animator, Agent, this, _detector);
-        ChaseState = new ChaseState(_stateMachine, _animator, Agent, this, _detector);
-        AttackState = new AttackState(_stateMachine, _animator, Agent, this, _detector);
-        _stateMachine.SetState(WanderState);
+        _stateMachine.SetState(_stateMachine.WanderState);
+        
+        _enemyList.RegisterEnemy(this);
     }
 
     private void Update()
@@ -96,12 +90,12 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         _health.TakeDamage(amount);
     }
-
+    
     private void OnHit()
     {
         Agent.speed /= 3f;
-        ChaseState.AgroStatus();
-        if (_stateMachine.CurrentState != ChaseState)  _stateMachine.SetState(ChaseState);
+        _stateMachine.ChaseState.AgroStatus();
+        if (_stateMachine.CurrentState != _stateMachine.ChaseState)  _stateMachine.SetState(_stateMachine.ChaseState);
         _animator.CrossFade(_hitHash, 0.1f);
     }
     
@@ -113,6 +107,8 @@ public class Enemy : MonoBehaviour, IDamageable
         Agent.isStopped = true;
         
         _animator.CrossFade(_dieHash, 0.1f);
+        
+        _enemyList.EnemyDefeated(this);
     }
 
     private void OnEnable()

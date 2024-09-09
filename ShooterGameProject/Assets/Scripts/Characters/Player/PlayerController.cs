@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 {
     public InputReader input;
     public GameObject aimIKTarget;
-    public Health Health { get; private set; }
+    public Health Health = new Health(100f);
     public CharacterAnimator CharacterAnimator { get; private set; }
     public CombatSystemController CombatSystemController { get; private set; }
     public PlayerLocomotion Motor { get; private set; }
@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     #region Parameters
     
-    [SerializeField] private float maxHp;
     [field: SerializeField] public float MoveSpeed { get; private set; }
     [field: SerializeField] public float SprintSpeed { get; private set; }
     [field: SerializeField] public float CrouchSpeed { get; private set; }
@@ -26,17 +25,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     
     #endregion
     
-    #region States 
-    
-    private StateMachine _stateMachine;
-    public IdleState IdleState { get; private set; }
-    public WalkingState WalkingState { get; private set; }
-    public RunningState RunningState { get; private set; }
-    public CrouchingState CrouchingState { get; private set; }
-    public InAirState InAirState { get; private set; }
-    
-    #endregion
-
+    private PlayerStateMachine _stateMachine;
     private CameraService _cameraService;
     private Hitbox _hitbox;
     private Camera _mainCamera;
@@ -44,7 +33,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private float _currentSpeed;
     private bool _lockRotation;
     private bool _isFreeLook;
-
+    
     private void Awake()
     {
         CharacterAnimator = GetComponent<CharacterAnimator>();
@@ -54,19 +43,18 @@ public class PlayerController : MonoBehaviour, IDamageable
         _hitbox = GetComponent<Hitbox>();
         _mainCamera = Camera.main;
         
-        _stateMachine = new StateMachine();
-        IdleState = new IdleState(_stateMachine,this);
-        WalkingState = new WalkingState(_stateMachine,this);
-        RunningState = new RunningState(_stateMachine,this);
-        CrouchingState = new CrouchingState(_stateMachine,this);
-        InAirState = new InAirState(_stateMachine,this);
-        this.Health = new Health(maxHp);
+        _stateMachine = new PlayerStateMachine();
+        
     }
     private void Start()
     {
-        _stateMachine.SetState(IdleState);
+        _stateMachine.InitStates(this);
+        _stateMachine.SetState(_stateMachine.IdleState);
         _hitbox.SetBodyType(BodyType);
-        
+    }
+
+    private void OnEnable()
+    {
         input.Jump += OnJump;
         input.Roll += OnRoll;
         input.FreeLook += FreeLook;
@@ -83,7 +71,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Die()
     {
-        CharacterAnimator.SetHoldWeaponRigWeight(0f);
+        CharacterAnimator.RigBuilder.enabled = false;
         IsDead = true;
         CharacterAnimator.Animator.SetTrigger(CharacterAnimator.DeathTrigger);
     }
@@ -96,7 +84,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         _stateMachine.Update();
         if (!Motor.IsGrounded())
         {
-            if (_stateMachine.CurrentState != InAirState) { _stateMachine.SetState(InAirState); }
+            if (_stateMachine.CurrentState != _stateMachine.InAirState) { _stateMachine.SetState(_stateMachine.InAirState); }
         }
     }
 

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: AK-47
   icon: {fileID: 21300000, guid: c81250a970ae0b54b85b39d3309c6df4, type: 3}
-  damage: 12.5
+  damage: 12
   range: 500
-  fireRate: 8.5
+  fireRate: 8
   ammoType: 0
   crosshairFactor: 1.25
   headShotMultiplier: 4
@@ -25,9 +25,7 @@ MonoBehaviour:
     m_Bits: 136
   prefab: {fileID: 5726268224729769293, guid: 4f5f6d0e4311c9a48a67448d75bed711, type: 3}
   impactEffectPreset: {fileID: 11400000, guid: 5671092fe322619458545675e4f78573, type: 2}
-  cameraShakeDuration: 0.12
-  cameraShakeStrength: 0.04
-  easeMode: 31
+  cameraShakePreset: {fileID: 11400000, guid: 921ce00cf0eca5f40a6c6c84ce5d5aad, type: 2}
   useRecoil: 1
   recoilFactor: 0.01
   bodyRecoilFactor: 0.04

@@ -22,4 +22,5 @@ public class EnemyData : ScriptableObject
     public float viewAngle;
     public float wanderRadius;
     public float detectionCooldown = 1f;
+    public float idleTime = 3f;
 }

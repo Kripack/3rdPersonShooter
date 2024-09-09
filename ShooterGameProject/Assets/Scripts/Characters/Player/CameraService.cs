@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Cinemachine;
 using DG.Tweening;
@@ -43,27 +44,24 @@ public class CameraService : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         
         _mainCamera = Camera.main;
-
-        playerInput.Aim += AimCameraSwitch;
-        playerInput.ViewChange += ChangeView;
     }
     public void CameraControl()
     {
         CameraRotation();
     }
 
-    public void ShakeCamera(float duration = 0.1f, float strength = 0.05f, Ease easeMode = Ease.InOutBounce)
+    public void ShakeCamera(CameraShakePreset preset)
     {
         var cameraTransform = cameraFollowTarget;
 
         cameraTransform
-            .DOShakePosition(duration, strength, 10, 90f, false,true, ShakeRandomnessMode.Harmonic)
-            .SetEase(easeMode)
+            .DOShakePosition(preset.duration, preset.strength, 10, 90f, false,true, ShakeRandomnessMode.Harmonic)
+            .SetEase(preset.easeMode)
             .SetLink(cameraTransform.gameObject);
 
         cameraTransform
-            .DOShakeRotation(duration, strength, 10, 90f, true, ShakeRandomnessMode.Harmonic)
-            .SetEase(easeMode)
+            .DOShakeRotation(preset.duration, preset.strength, 10, 90f, true, ShakeRandomnessMode.Harmonic)
+            .SetEase(preset.easeMode)
             .SetLink(cameraTransform.gameObject);
     }
     
@@ -99,5 +97,16 @@ public class CameraService : MonoBehaviour
             SetSensitivity(_normalSensitivity);
         }
     }
-    
+
+    private void OnEnable()
+    {
+        playerInput.Aim += AimCameraSwitch;
+        playerInput.ViewChange += ChangeView;
+    }
+
+    private void OnDisable()
+    {
+        playerInput.Aim -= AimCameraSwitch;
+        playerInput.ViewChange -= ChangeView;
+    }
 }

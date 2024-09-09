@@ -3,6 +3,7 @@ using UnityEngine.AI;
 
 public abstract class EnemyBaseState : BaseState
 {
+    protected EnemyStateMachine stateMachine;
     protected readonly Animator animator;
     protected readonly NavMeshAgent agent;
     protected readonly Enemy enemy;
@@ -17,9 +18,9 @@ public abstract class EnemyBaseState : BaseState
     
     protected const float crossFadeDuration = 0.2f;
     
-    public EnemyBaseState(StateMachine stateMachine, Animator animator, NavMeshAgent agent, Enemy enemy, PlayerDetector detector)
-        : base(stateMachine)
+    public EnemyBaseState(EnemyStateMachine enemyStateMachine, Animator animator, NavMeshAgent agent, Enemy enemy, PlayerDetector detector)
     {
+        this.stateMachine = enemyStateMachine;
         this.animator = animator;
         this.agent = agent;
         detectionTimer = new CountdownTimer(enemy.Data.detectionCooldown);

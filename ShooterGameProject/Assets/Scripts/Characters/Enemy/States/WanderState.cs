@@ -7,7 +7,7 @@ public class WanderState : EnemyBaseState
     private readonly float _wanderRadius;
     private readonly float _wanderSpeed;
 
-    public WanderState(StateMachine stateMachine, Animator animator, NavMeshAgent agent, Enemy enemy, PlayerDetector detector) : base(
+    public WanderState(EnemyStateMachine stateMachine, Animator animator, NavMeshAgent agent, Enemy enemy, PlayerDetector detector) : base(
             stateMachine, animator, agent, enemy, detector)
     {
         _startPoint = detector.Origin.position;
@@ -20,19 +20,14 @@ public class WanderState : EnemyBaseState
         animator.CrossFade(walkHash, crossFadeDuration);
         
         agent.speed = _wanderSpeed;
+        SetRandomDestination();
     }
     
     public override void Update() 
     {
         if (HasReachedDestination())
         {
-            var randomDirection = Random.insideUnitSphere * _wanderRadius;
-            randomDirection += _startPoint;
-            NavMeshHit hit;
-            NavMesh.SamplePosition(randomDirection, out hit, _wanderRadius, 1);
-            var finalPosition = hit.position;
-                
-            agent.SetDestination(finalPosition);
+            stateMachine.SetState(stateMachine.IdleStateEnemy);
         }
         
         detectionTimer.Tick(Time.deltaTime);
@@ -42,11 +37,22 @@ public class WanderState : EnemyBaseState
 
             if (detector.CanDetectPlayer())
             {
-                stateMachine.SetState(enemy.ChaseState); 
+                stateMachine.SetState(stateMachine.ChaseState); 
             }
         }
     }
-        
+
+    private void SetRandomDestination()
+    {
+        var randomDirection = Random.insideUnitSphere * _wanderRadius;
+        randomDirection += _startPoint;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomDirection, out hit, _wanderRadius, 1);
+        var finalPosition = hit.position;
+                
+        agent.SetDestination(finalPosition);
+    }
+
     private bool HasReachedDestination() 
     {
         return !agent.pathPending
