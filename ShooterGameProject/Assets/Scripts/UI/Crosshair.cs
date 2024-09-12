@@ -1,9 +1,10 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Crosshair : MonoBehaviour
 {
-    [SerializeField] private CombatSystemController combatSystemController;
+    [FormerlySerializedAs("combatSystemController")] [SerializeField] private PlayerCombatController playerCombatController;
     [SerializeField] private float returnSpeed;
     [SerializeField] private float baseAttackFactor;
 
@@ -18,7 +19,7 @@ public class Crosshair : MonoBehaviour
     
     private void Start()
     {
-        _input = combatSystemController.input;
+        _input = playerCombatController.input;
         
         _startScale = transform.localScale;
         _targetScale = _startScale;
@@ -50,11 +51,11 @@ public class Crosshair : MonoBehaviour
 
     private void OnEnable()
     {
-        combatSystemController.OnAttack += ReactOnAttack;
+        playerCombatController.OnAttack += ReactOnAttack;
     }
 
     private void OnDisable()
     {
-        combatSystemController.OnAttack -= ReactOnAttack;
+        playerCombatController.OnAttack -= ReactOnAttack;
     }
 }

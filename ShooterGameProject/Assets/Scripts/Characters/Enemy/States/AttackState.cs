@@ -26,7 +26,7 @@ public class AttackState : EnemyBaseState
         if (!enemy.AttackTimer.IsRunning)
         {
             enemy.AttackTimer.Start();
-            animator.CrossFade(attackHash, 0.2f);
+            RandomAttack();
             return;
         }
         
@@ -42,6 +42,20 @@ public class AttackState : EnemyBaseState
         }
     }
 
+    private void RandomAttack()
+    {
+        int index = Random.Range(1, 3);
+        switch (index)
+        {
+            case 1:
+                animator.CrossFade(attack01Hash, 0.2f);
+                break;
+            case 2:
+                animator.CrossFade(attack02Hash, 0.2f);
+                break;
+        }
+    }
+    
     public override void OnExit()
     {
         agent.updateRotation = true;

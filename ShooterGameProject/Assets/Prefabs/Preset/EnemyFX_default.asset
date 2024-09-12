@@ -16,3 +16,6 @@ MonoBehaviour:
   fleshBodyEffect: {fileID: 3824937358439885782, guid: 6f09700bbb120b34f93504fc33fd7a3a, type: 3}
   solidBodyEffect: {fileID: 0}
   headShotEffect: {fileID: 100010, guid: d609d5ebc845aca409f72e9c6a56dc60, type: 3}
+  hitSound:
+  - {fileID: 8300000, guid: e46c633a3d9703b46b4b9632ea729e38, type: 3}
+  headshotSound: {fileID: 0}

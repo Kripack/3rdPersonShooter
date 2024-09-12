@@ -20,8 +20,8 @@ public class AmmoManager
 
         _totalAmmo = new Dictionary<AmmoType, int>
         {
-            { AmmoType.Pistol9Mm, 90 },
-            { AmmoType.Rifle762X39Mm, 180 },
+            { AmmoType.Pistol9Mm, 27 },
+            { AmmoType.Rifle762X39Mm, 120 },
             { AmmoType.None, 1 },
         };
 
@@ -81,5 +81,6 @@ public class AmmoManager
     public void AddTotalAmmo(AmmoType ammoType, int count)
     {
         _totalAmmo[ammoType] += count;
+        OnAmmoChanged?.Invoke();
     }
 }

@@ -9,12 +9,12 @@ public class WeaponSelector
     public int CurrentWeaponIndex { get; set; }
 
     private WeaponData[] _weaponDataArray;
-    private readonly CombatSystemController _combatSystemController;
+    private readonly PlayerCombatController _playerCombatController;
     private readonly Transform _spawnPos;
     
-    public WeaponSelector(CombatSystemController combatSystemController, Transform spawnPos, WeaponData[] weaponDataArray)
+    public WeaponSelector(PlayerCombatController playerCombatController, Transform spawnPos, WeaponData[] weaponDataArray)
     {
-        _combatSystemController = combatSystemController;
+        _playerCombatController = playerCombatController;
         _spawnPos = spawnPos;
         _weaponDataArray = weaponDataArray;
         CurrentWeaponIndex = -1;
@@ -22,7 +22,7 @@ public class WeaponSelector
     
     public void DisableWeapon(Weapon currentWeapon)
     {
-        _combatSystemController.SetEquipStatus(false);
+        _playerCombatController.SetEquipStatus(false);
         OnWeaponDisabled?.Invoke();
         
         currentWeapon.Disable();
@@ -32,9 +32,10 @@ public class WeaponSelector
     private Weapon ActivateWeapon(WeaponData data)
     {
         var newWeaponObject = Object.Instantiate(data.prefab, _spawnPos);
-        var newWeapon = newWeaponObject.GetComponent<Weapon>().Initialize(data, _combatSystemController);
+        var newWeapon = newWeaponObject.GetComponent<Weapon>().Initialize(data, _playerCombatController);
         
-        _combatSystemController.SetEquipStatus(true);
+        _playerCombatController.SetEquipStatus(true);
+        OnWeaponSelected?.Invoke(data);
         return newWeapon;
     }
     
@@ -43,7 +44,6 @@ public class WeaponSelector
         CurrentWeaponIndex = index % _weaponDataArray.Length;
         var selectedWeapon = _weaponDataArray[CurrentWeaponIndex];
         
-        OnWeaponSelected?.Invoke(selectedWeapon);
         return ActivateWeapon(selectedWeapon);
     }
     

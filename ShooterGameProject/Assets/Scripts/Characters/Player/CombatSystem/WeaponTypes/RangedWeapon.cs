@@ -6,9 +6,9 @@ public class RangedWeapon : Weapon
     [SerializeField] protected ParticleSystem muzzleFlash;
 
     protected RangedWeaponData rangeData;
-    public override Weapon Initialize(WeaponData data, CombatSystemController cSystemController)
+    public override Weapon Initialize(WeaponData data, PlayerCombatController cController)
     {
-        base.Initialize(data, cSystemController);
+        base.Initialize(data, cController);
         
         characterAnimator.Animator.SetBool(characterAnimator.AimingBool, true);
 
@@ -16,7 +16,7 @@ public class RangedWeapon : Weapon
         {
             rangeData = (RangedWeaponData) data;
         }
-        else { Debug.LogError("This is a Ranged Weapon. The data file should be RangeWeaponData."); } // як веде себе в білді?
+        else { Debug.LogError("This is a Ranged Weapon. The data file should be RangeWeaponData."); }
 
         return this;
     }
@@ -26,8 +26,8 @@ public class RangedWeapon : Weapon
         ReactOnPrimaryAttack();
         
         VisualFXManager.instance.PlayParticleSystem(muzzleFlash); 
-        SoundFXManager.instance.PlayAudioClip(rangeData.shootingSound, weaponAudioSource); 
-        SoundFXManager.instance.PlayRandomAudioClip(rangeData.bulletShellsSound, weaponAudioSource);
+        SoundFXManager.instance.PlayAudioClip(Data.weaponSoundPreset.shootingSound, weaponAudioSource); 
+        SoundFXManager.instance.PlayRandomAudioClip(Data.weaponSoundPreset.bulletShellsSound, weaponAudioSource);
     }
 
     public override void Disable()
@@ -41,7 +41,7 @@ public class RangedWeapon : Weapon
         if (isReloading) return;
         isReloading = true;
 
-        SoundFXManager.instance.PlayAudioClip(rangeData.reloadSound, weaponAudioSource);
+        SoundFXManager.instance.PlayAudioClip(rangeData.weaponSoundPreset.reloadSound, weaponAudioSource);
         
         characterAnimator.Animator.SetTrigger(characterAnimator.ReloadTrigger);
         StartCoroutine(WeaponRigDelay(rangeData.reloadAnimation.length - 0.5f));
@@ -50,7 +50,7 @@ public class RangedWeapon : Weapon
     public override void ApplyReload()
     {
         if (!isReloading) return;
-        combatSystemController.AmmoManager.Reload(rangeData.ammoType);
+        playerCombatController.AmmoManager.Reload(rangeData.ammoType);
         isReloading = false;
     }
 
@@ -59,13 +59,13 @@ public class RangedWeapon : Weapon
         base.ReactOnPrimaryAttack();
         
         var recoil = new Vector3(rangeData.bodyRecoilFactor, 0f, 0f);
-        combatSystemController.ApplyBodyRecoil(recoil);
+        playerCombatController.ApplyBodyRecoil(recoil);
     }
     
     protected Vector3 CalculateSpread()
     {
         var recoilFactor = rangeData.recoilFactor;
-        if (!combatSystemController.FirstAttackPerformed) recoilFactor = rangeData.recoilFactor / 3f;
+        if (!playerCombatController.FirstAttackPerformed) recoilFactor = rangeData.recoilFactor / 3f;
         
         return new Vector3
         {

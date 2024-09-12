@@ -4,9 +4,8 @@ using UnityEngine;
 public class EnemyData : ScriptableObject
 {
     public BodyType bodyType;
-    public ImpactEffectPreset impactEffectPreset;
-    public AudioFXPreset audioFXPreset;
     
+    [Header("Stats")]
     public float maxHp;
     public float speed;
     public float chaseSpeedFactor;
@@ -14,6 +13,7 @@ public class EnemyData : ScriptableObject
     public float WanderSpeed => speed;
     public float ChaseSpeed => speed * chaseSpeedFactor;
     public float damage;
+    public float secondAttackMultiplier = 1f;
     public float attackRate;
     public float attackRange;
     public float attackArea;
@@ -23,4 +23,7 @@ public class EnemyData : ScriptableObject
     public float wanderRadius;
     public float detectionCooldown = 1f;
     public float idleTime = 3f;
+    
+    [Header("Effects")] 
+    public ImpactFXPreset impactFXPreset;
 }

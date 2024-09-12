@@ -76,14 +76,23 @@ public class Enemy : MonoBehaviour, IDamageable
         if (hit.collider == null) return;
         if (hit.collider.TryGetComponent<IAttackVisitor>(out var attackVisitor) == true)
         {
-            AcceptAttack(attackVisitor, hit);
-            SoundFXManager.instance.PlayRandomAudioClip(Data.audioFXPreset.attackClips, _audioSource, 0.75f);
+            AcceptAttack(attackVisitor, hit, 1f);
         }
     }
 
-    private void AcceptAttack(IAttackVisitor attackVisitor, RaycastHit hit)
+    public void SecondAttack()
     {
-        attackVisitor.Visit(this, hit);
+        var hit = _attackStrategy.Execute(transform.position + Vector3.up, transform.forward, Data.attackRange);
+        if (hit.collider == null) return;
+        if (hit.collider.TryGetComponent<IAttackVisitor>(out var attackVisitor) == true)
+        {
+            AcceptAttack(attackVisitor, hit, Data.secondAttackMultiplier);
+        }
+    }
+    
+    private void AcceptAttack(IAttackVisitor attackVisitor, RaycastHit hit, float damageMultiplier)
+    {
+        attackVisitor.Visit(this, hit, damageMultiplier);
     }
     
     public void TakeDamage(float amount)
@@ -93,18 +102,19 @@ public class Enemy : MonoBehaviour, IDamageable
     
     private void OnHit()
     {
-        Agent.speed /= 3f;
         _stateMachine.ChaseState.AgroStatus();
         if (_stateMachine.CurrentState != _stateMachine.ChaseState)  _stateMachine.SetState(_stateMachine.ChaseState);
+        Agent.speed /= 3f;
         _animator.CrossFade(_hitHash, 0.1f);
     }
     
-    private void Die()
+    private void OnDeath()
     {
         Agent.baseOffset = 0f;
         _ownCollider.enabled = false;
         IsDead = true;
         Agent.isStopped = true;
+        Agent.radius = 0f;
         
         _animator.CrossFade(_dieHash, 0.1f);
         
@@ -113,14 +123,14 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void OnEnable()
     {
-        _health.Die += Die;
+        _health.Die += OnDeath;
         _hitbox.OnHit += OnHit;
         if (_headHitbox != null) _headHitbox.OnHit += OnHit;
     }
 
     private void OnDisable()
     {
-        _health.Die -= Die;
+        _health.Die -= OnDeath;
         _hitbox.OnHit -= OnHit;
         if (_headHitbox != null) _headHitbox.OnHit -= OnHit;
     }

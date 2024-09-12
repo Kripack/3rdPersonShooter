@@ -8,7 +8,7 @@ public class HealEffectScreen : MonoBehaviour
     [Inject] private PlayerController _player;
     [SerializeField] private float delayTime = 0.5f;
     [SerializeField] private float fadeOutDuration = 0.5f;
-    
+    [SerializeField] private float startAlpha = 0.5f;
     private Image _healImage;
     private Coroutine _healEffectCoroutine;
     
@@ -40,7 +40,7 @@ public class HealEffectScreen : MonoBehaviour
     private IEnumerator HitEffect()
     {
         _healImage.enabled = true;
-        _healImage.color = new Color(_healImage.color.r, _healImage.color.g, _healImage.color.b, 0.5f);
+        _healImage.color = new Color(_healImage.color.r, _healImage.color.g, _healImage.color.b, startAlpha);
         
         // Затримка перед початком зникнення
         yield return new WaitForSeconds(delayTime);
@@ -50,7 +50,7 @@ public class HealEffectScreen : MonoBehaviour
         while (elapsedTime < fadeOutDuration)
         {
             elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Clamp01(0.5f - elapsedTime / fadeOutDuration);
+            float alpha = Mathf.Clamp01(startAlpha - elapsedTime / fadeOutDuration);
             _healImage.color = new Color(_healImage.color.r, _healImage.color.g, _healImage.color.b, alpha);
             yield return null;
         }

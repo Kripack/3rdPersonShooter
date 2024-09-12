@@ -5,7 +5,7 @@ public class Hitbox : MonoBehaviour, IAttackVisitor
 {
     public event Action OnHit;
 
-    private BodyType _bodyType;
+    protected BodyType _bodyType;
     protected IDamageable damageable;
 
     public void SetBodyType(BodyType type)
@@ -18,30 +18,30 @@ public class Hitbox : MonoBehaviour, IAttackVisitor
         damageable = GetDamageable();
     }
 
-    public virtual void Visit(Enemy enemy, RaycastHit hit)
+    public virtual void Visit(Enemy enemy, RaycastHit hit, float damageMultiplier = 1f)
     {
         if (damageable.IsDead) return;
-        DefaultVisit(enemy.Data.damage);
+        DefaultVisit(enemy.Data.damage, damageMultiplier);
         
         var impactRotation = Quaternion.LookRotation(hit.normal);
-        PlayImpactFX(enemy.Data.impactEffectPreset, hit.point, impactRotation, _bodyType);
+        PlayImpactFX(enemy.Data.impactFXPreset, hit.point, impactRotation);
     }
 
-    public virtual void Visit(Weapon weapon, RaycastHit hit)
+    public virtual void Visit(Weapon weapon, RaycastHit hit, float damageMultiplier = 1f)
     {
-        DefaultVisit(weapon.Data.damage);
+        DefaultVisit(weapon.Data.damage, damageMultiplier);
     }
     
-    public virtual void Visit(RaycastWeapon weapon, RaycastHit hit)
+    public virtual void Visit(RaycastWeapon weapon, RaycastHit hit, float damageMultiplier = 1f)
     {
         if (damageable.IsDead) return;
-        DefaultVisit(weapon.Data.damage);
+        DefaultVisit(weapon.Data.damage, damageMultiplier);
         
         var impactRotation = Quaternion.LookRotation(hit.normal);
-        PlayImpactFX(weapon.Data.impactEffectPreset, hit.point, impactRotation, _bodyType);
+        PlayImpactFX(weapon.Data.impactFXPreset, hit.point, impactRotation);
     }
     
-    protected void DefaultVisit(float damage, float damageMultiplier = 1f)
+    protected void DefaultVisit(float damage, float damageMultiplier)
     {
         OnHit?.Invoke();
         
@@ -54,12 +54,15 @@ public class Hitbox : MonoBehaviour, IAttackVisitor
         return GetComponent<IDamageable>();
     }
 
-    protected virtual void PlayImpactFX(ImpactEffectPreset preset, Vector3 position, Quaternion rotation, BodyType bodyType)
+    protected virtual void PlayImpactFX(ImpactFXPreset preset, Vector3 position, Quaternion rotation)
     {
-        switch (bodyType)
+        SoundFXManager.instance.PlayRandomAudioClip(preset.hitSound, position);
+        
+        switch (_bodyType)
         {
             case BodyType.FleshBody :
                 VisualFXManager.instance.SpawnImpactEffect(preset.fleshBodyEffect, position, rotation);
+                
                 break;
             case BodyType.SolidBody :
                 VisualFXManager.instance.SpawnImpactEffect(preset.solidBodyEffect, position, rotation);

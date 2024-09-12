@@ -1,29 +1,26 @@
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 public class AmmoBar : MonoBehaviour
 {
-    [SerializeField] private CombatSystemController combatSystemController;
-    private TextMeshProUGUI _text;
+    [Inject] private PlayerCombatController _playerCombatController;
+    [SerializeField] private TextMeshProUGUI magazineText;
+    [SerializeField] private TextMeshProUGUI totalText;
     private AmmoType _ammoType;
-    
-    private void Awake()
-    {
-        _text = GetComponent<TextMeshProUGUI>();
-    }
 
     private void OnEnable()
     {
-        combatSystemController.AmmoManager.OnAmmoChanged += UpdateUI;
-        combatSystemController.WeaponSelector.OnWeaponSelected += ChangeWeapon;
-        combatSystemController.WeaponSelector.OnWeaponDisabled += ClearUI;
+        _playerCombatController.AmmoManager.OnAmmoChanged += UpdateUI;
+        _playerCombatController.WeaponSelector.OnWeaponSelected += ChangeWeapon;
+        _playerCombatController.WeaponSelector.OnWeaponDisabled += ClearUI;
     }
     
     private void OnDisable()
     {
-        combatSystemController.AmmoManager.OnAmmoChanged -= UpdateUI;
-        combatSystemController.WeaponSelector.OnWeaponSelected -= ChangeWeapon;
-        combatSystemController.WeaponSelector.OnWeaponDisabled -= ClearUI;
+        _playerCombatController.AmmoManager.OnAmmoChanged -= UpdateUI;
+        _playerCombatController.WeaponSelector.OnWeaponSelected -= ChangeWeapon;
+        _playerCombatController.WeaponSelector.OnWeaponDisabled -= ClearUI;
     }
 
     private void ChangeWeapon(WeaponData newWeapon)
@@ -34,12 +31,16 @@ public class AmmoBar : MonoBehaviour
     
     private void UpdateUI()
     {
-        _text.text = combatSystemController.AmmoManager.GetCurrentAmmo(_ammoType) + "/" +
-                     combatSystemController.AmmoManager.GetMagazineSizes(_ammoType);
+        if (!_playerCombatController.WeaponEquiped) return;
+        
+        magazineText.text = _playerCombatController.AmmoManager.GetCurrentAmmo(_ammoType) + "/" +
+                     _playerCombatController.AmmoManager.GetMagazineSizes(_ammoType);
+        totalText.text = _playerCombatController.AmmoManager.GetTotalAmmo(_ammoType).ToString();
     }
 
     private void ClearUI()
     {
-        _text.text = "";
+        magazineText.text = "";
+        totalText.text = "";
     }
 }

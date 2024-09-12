@@ -8,7 +8,7 @@ public class HitEffectScreen : MonoBehaviour
     [Inject] private PlayerController _player;
     [SerializeField] private float delayTime = 0.5f;
     [SerializeField] private float fadeOutDuration = 0.5f;
-    
+    [SerializeField] private float startAlpha = 1f;
     private Image _hitImage;
     private Coroutine _hitEffectCoroutine;
     
@@ -40,7 +40,7 @@ public class HitEffectScreen : MonoBehaviour
     private IEnumerator HitEffect()
     {
         _hitImage.enabled = true;
-        _hitImage.color = new Color(_hitImage.color.r, _hitImage.color.g, _hitImage.color.b, 1f);
+        _hitImage.color = new Color(_hitImage.color.r, _hitImage.color.g, _hitImage.color.b, startAlpha);
         
         // Затримка перед початком зникнення
         yield return new WaitForSeconds(delayTime);
@@ -50,7 +50,7 @@ public class HitEffectScreen : MonoBehaviour
         while (elapsedTime < fadeOutDuration)
         {
             elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Clamp01(1f - elapsedTime / fadeOutDuration);
+            float alpha = Mathf.Clamp01(startAlpha - elapsedTime / fadeOutDuration);
             _hitImage.color = new Color(_hitImage.color.r, _hitImage.color.g, _hitImage.color.b, alpha);
             yield return null;
         }

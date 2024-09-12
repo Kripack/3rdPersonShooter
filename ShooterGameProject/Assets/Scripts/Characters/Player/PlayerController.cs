@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     public GameObject aimIKTarget;
     public Health Health = new Health(100f);
     public CharacterAnimator CharacterAnimator { get; private set; }
-    public CombatSystemController CombatSystemController { get; private set; }
+    public PlayerCombatController PlayerCombatController { get; private set; }
     public PlayerLocomotion Motor { get; private set; }
     public bool IsPerformingAction { get; set; }
     public bool IsJumped { get; set; }
@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         CharacterAnimator = GetComponent<CharacterAnimator>();
         Motor = GetComponent<PlayerLocomotion>();
         _cameraService = GetComponent<CameraService>();
-        CombatSystemController = GetComponent<CombatSystemController>();
+        PlayerCombatController = GetComponent<PlayerCombatController>();
         _hitbox = GetComponent<Hitbox>();
         _mainCamera = Camera.main;
         
@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         
         IsJumped = true;
             
-        if (CombatSystemController.WeaponEquiped) CharacterAnimator.PlayTargetActionAnimation(CharacterAnimator.JumpLegsOnlyAnimation, false);
+        if (PlayerCombatController.WeaponEquiped) CharacterAnimator.PlayTargetActionAnimation(CharacterAnimator.JumpLegsOnlyAnimation, false);
         else if (_stateMachine.CurrentState is RunningState) CharacterAnimator.PlayTargetActionAnimation(CharacterAnimator.JumpWhileRunningAnimation, false);
         else CharacterAnimator.PlayTargetActionAnimation(CharacterAnimator.JumpAnimation, false);
     }
@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (IsPerformingAction || IsJumped || IsDead) return;
         if (_stateMachine.CurrentState is InAirState) return;
         if (input.moveInput == Vector2.zero) return;
-        if (CombatSystemController.WeaponEquiped) return;
+        if (PlayerCombatController.WeaponEquiped) return;
         
         Motor.RotateToMoveDir(input.moveInput);
         CharacterAnimator.PlayTargetActionAnimation(CharacterAnimator.RollAnimation, true, true);

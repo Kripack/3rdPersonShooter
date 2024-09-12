@@ -1,10 +1,11 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class WeaponBar : MonoBehaviour
 {
-    [SerializeField] private CombatSystemController combatSystemController;
+    [FormerlySerializedAs("combatSystemController")] [SerializeField] private PlayerCombatController playerCombatController;
     private TextMeshProUGUI _text;
     private Image _icon;
 
@@ -16,14 +17,14 @@ public class WeaponBar : MonoBehaviour
 
     private void OnEnable()
     {
-        combatSystemController.WeaponSelector.OnWeaponSelected += UpdateUI;
-        combatSystemController.WeaponSelector.OnWeaponDisabled += ClearUI;
+        playerCombatController.WeaponSelector.OnWeaponSelected += UpdateUI;
+        playerCombatController.WeaponSelector.OnWeaponDisabled += ClearUI;
     }
     
     private void OnDisable()
     {
-        combatSystemController.WeaponSelector.OnWeaponSelected -= UpdateUI;
-        combatSystemController.WeaponSelector.OnWeaponDisabled -= ClearUI;
+        playerCombatController.WeaponSelector.OnWeaponSelected -= UpdateUI;
+        playerCombatController.WeaponSelector.OnWeaponDisabled -= ClearUI;
     }
     
     private void UpdateUI(WeaponData data)

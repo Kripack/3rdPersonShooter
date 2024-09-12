@@ -1,4 +1,3 @@
-using DG.Tweening;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/WeaponData/Default")]
@@ -6,8 +5,9 @@ public class WeaponData : ScriptableObject
 {
     
     public string weaponName;
+    public GameObject prefab;
     public Sprite icon;
-    [Header("Parameters")]
+    [Header("Stats")]
     public float damage;
     public float range;
     public float fireRate;
@@ -15,8 +15,10 @@ public class WeaponData : ScriptableObject
     public float crosshairFactor = 1f;
     public float headShotMultiplier = 2f;
     public LayerMask layerMask;
-    public GameObject prefab;
-    public ImpactEffectPreset impactEffectPreset;
+    
+    [Header("Effects")]
+    public ImpactFXPreset impactFXPreset;
+    public WeaponSoundPreset weaponSoundPreset;
     public CameraShakePreset cameraShakePreset;
 
 }

@@ -15,7 +15,7 @@ public class RaycastWeapon : RangedWeapon
         {
             if (hit.transform.CompareTag("Environment"))
             {
-                VisualFXManager.instance.SpawnImpactEffect(Data.impactEffectPreset.environmentImpactEffect, hit);
+                VisualFXManager.instance.SpawnImpactEffect(Data.impactFXPreset.environmentImpactEffect, hit);
                 
                 return;
             }
@@ -29,6 +29,6 @@ public class RaycastWeapon : RangedWeapon
 
     private void AcceptAttack(IAttackVisitor attackVisitor, RaycastHit hit)
     {
-        attackVisitor.Visit(this, hit);
+        attackVisitor.Visit(this, hit, 1f);
     }
 }

@@ -10,14 +10,14 @@ public class Weapon : MonoBehaviour
     
     protected Camera fpsCam;
     protected CharacterAnimator characterAnimator;
-    protected CombatSystemController combatSystemController;
+    protected PlayerCombatController playerCombatController;
     protected AudioSource weaponAudioSource;
     protected bool isReloading;
 
-    public virtual Weapon Initialize(WeaponData data, CombatSystemController cSystemController)
+    public virtual Weapon Initialize(WeaponData data, PlayerCombatController cController)
     {
-        combatSystemController = cSystemController;
-        characterAnimator = cSystemController.CharacterAnimator;
+        playerCombatController = cController;
+        characterAnimator = cController.CharacterAnimator;
         weaponAudioSource = GetComponent<AudioSource>();
         fpsCam = Camera.main;
         Data = data;

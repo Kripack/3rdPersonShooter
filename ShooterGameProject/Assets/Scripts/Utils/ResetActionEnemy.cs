@@ -10,6 +10,6 @@ public class ResetActionEnemy : StateMachineBehaviour
             _enemy = animator.GetComponent<Enemy>();
         }
 
-        _enemy.Agent.speed = _enemy.Data.speed;
+        _enemy.Agent.speed = _enemy.Data.ChaseSpeed;
     }
 }

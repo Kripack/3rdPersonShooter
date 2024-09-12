@@ -5,7 +5,8 @@ public class HealingIItem : MonoBehaviour
 {
     [SerializeField] private float healAmount;
     [SerializeField] private float rotationSpeed;
-    [SerializeField] private LayerMask layerMask;
+    [SerializeField] private AudioClip pickupClip;
+    [SerializeField][Range(0, 1f)] private float pickupVolume;
     [Inject] private PlayerController _player;
     
     private void Update()
@@ -18,6 +19,8 @@ public class HealingIItem : MonoBehaviour
         if (_player.Health.CurrentHp >= _player.Health.MaxHp) return;
         
         _player.Health.Heal(healAmount);
+        SoundFXManager.instance.PlayAudioClip(pickupClip, transform.position, pickupVolume);
+        
         Destroy(gameObject);
     }
 }

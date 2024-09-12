@@ -7,11 +7,5 @@ public class RangedWeaponData : WeaponData
     public bool useRecoil;
     public float recoilFactor;
     public float bodyRecoilFactor;
-    
-    [Header("Effects")]
-    public AudioClip shootingSound;
-    public AudioClip reloadSound;
-    public AudioClip[] bulletShellsSound;
-    
     public AnimationClip reloadAnimation;
 }
